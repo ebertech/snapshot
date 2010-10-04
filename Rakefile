@@ -5,6 +5,8 @@ begin
     gemspec.summary = "Save the database into a git-managed snapshot"
     gemspec.email = "andrew@ebertech.ca"
     gemspec.authors = ["Andrew Eberbach"]
+    gemspec.executables = ["snapshot"]
+    gemspec.files = Dir["lib/**/*.rb", "VERSION"]
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"
