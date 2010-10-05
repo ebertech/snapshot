@@ -1,1 +1,5 @@
 pkg
+config
+tmp
+log
+db

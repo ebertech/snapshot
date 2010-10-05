@@ -15,6 +15,19 @@ Gem::Specification.new do |s|
   s.executables = ["snapshot"]
   s.files = [
     "VERSION",
+     "lib/ebertech/snapshot/command.rb",
+     "lib/ebertech/snapshot/commands/create_config_command.rb",
+     "lib/ebertech/snapshot/commands/init_command.rb",
+     "lib/ebertech/snapshot/commands/list_revisions_command.rb",
+     "lib/ebertech/snapshot/commands/list_tags_command.rb",
+     "lib/ebertech/snapshot/commands/mark_clean_command.rb",
+     "lib/ebertech/snapshot/commands/mark_dirty_command.rb",
+     "lib/ebertech/snapshot/commands/remove_tag_command.rb",
+     "lib/ebertech/snapshot/commands/reset_command.rb",
+     "lib/ebertech/snapshot/commands/save_snapshot_command.rb",
+     "lib/ebertech/snapshot/commands/start_database_command.rb",
+     "lib/ebertech/snapshot/commands/stop_database_command.rb",
+     "lib/ebertech/snapshot/configuration.rb",
      "lib/snapshot.rb"
   ]
   s.rdoc_options = ["--charset=UTF-8"]
