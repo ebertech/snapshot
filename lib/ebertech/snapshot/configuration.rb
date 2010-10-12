@@ -18,7 +18,7 @@ module EberTech
         end
         
         def database_files_dir
-          File.join(data_dir, "database_files")
+          File.join(Dir.getwd, @configuration["database_files_dir"])
         end
         
         def pid_file

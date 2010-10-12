@@ -23,6 +23,7 @@ module Ebertech
             end
             File.open(configuration_path, "w+") do |file|
               file << "datadir: db/test_data\n"
+              file << "database_files_dir: db/test_data/database_files\n"
               file << "git: /usr/local/bin/git\n"
               file << "mysql: /usr/local/mysql/bin/mysql\n"
               file << "mysqld_safe: /usr/local/mysql/bin/mysqld_safe\n"

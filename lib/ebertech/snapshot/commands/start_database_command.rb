@@ -38,7 +38,7 @@ module EberTech
             --socket='#{configuration.socket}' >/dev/null 2>&1
             })
             begin 
-              Timeout::timeout(3) do
+              Timeout::timeout(10) do
                 loop do
                   run_command(%Q{'#{configuration.mysql_admin}' --socket='#{configuration.socket}' status >/dev/null 2>&1})              
                   return 0 if $? == 0
