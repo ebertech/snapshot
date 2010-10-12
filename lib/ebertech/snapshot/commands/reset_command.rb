@@ -13,3 +13,41 @@
 # else
 #     echo "it's clean!"
 # fi
+module EberTech
+  module Snapshot
+    module Commands
+      class ResetCommand < ::EberTech::Snapshot::Command
+        class << self
+          def command_name
+            "reset"
+          end
+          def description
+            %Q{Resets the database to a given revision or tag. Starts and stops the db in the process.}
+          end
+          def execute(arguments)
+            configuration = ::EberTech::Snapshot::Configuration.load
+            raise ArgumentError.new("Must specify a revision or tag") unless arguments.size == 1            
+            revision = arguments.first
+            if is_clean?(revision)
+              puts "it's clean!"
+              return 0
+            else
+              EberTech::Snapshot::Commands::StopDatabaseCommand.execute([])
+              run_command(%Q{
+                cd '#{configuration.data_dir}' && \
+                  '#{configuration.git}' clean -d -f
+              })     
+              run_command(%Q{
+                cd '#{configuration.data_dir}' && \
+                  '#{configuration.git}' reset --hard #{revision}
+              })     
+              EberTech::Snapshot::Commands::MarkCleanCommand.execute([revision])
+              EberTech::Snapshot::Commands::StartDatabaseCommand.execute([])
+            end
+            return $? == 0 ? 0 : 1
+          end
+        end
+      end
+    end
+  end
+end

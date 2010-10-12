@@ -10,6 +10,7 @@ module EberTech
         def load
           raise "no such file #{configuration_path}. Run snapshot create_config to create." unless File.exists?(configuration_path)
           @configuration = YAML.load(File.read(configuration_path))          
+          self
         end
         
         def data_dir
@@ -40,6 +41,10 @@ module EberTech
           @configuration["git"]
         end
         
+        def mysql
+          @configuration["mysql"]
+        end
+        
         def mysql_install_db
           @configuration["mysql_install_db"]
         end
@@ -50,7 +55,11 @@ module EberTech
         
         def mysqld_safe
           @configuration["mysqld_safe"]
-        end        
+        end      
+        
+        def version_file
+          File.join(data_dir, "clean.txt")
+        end  
       end
     end
   end
