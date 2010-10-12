@@ -16,7 +16,6 @@ module EberTech
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load
             run_command(%Q{
-              cd '#{configuration.data_dir}' && \
                 '#{configuration.mysql}' -u root \
                 --socket='#{configuration.socket}'\
                 -e "grant shutdown on *.* to #{ENV["USER"]}@localhost"

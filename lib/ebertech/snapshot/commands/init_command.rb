@@ -14,12 +14,12 @@ module EberTech
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load
             
-            FileUtils.mkdir_p(configuration.data_dir)
+            FileUtils.mkdir_p(configuration.database_files_dir)
             
             run_command(%Q{
               '#{configuration.mysql_install_db}' \
-                --datadir='#{configuration.data_dir}'  \
-                --ldata='#{configuration.data_dir}'
+                --datadir='#{configuration.database_files_dir}'  \
+                --ldata='#{configuration.database_files_dir}'
             })
             
             run_command(%Q{

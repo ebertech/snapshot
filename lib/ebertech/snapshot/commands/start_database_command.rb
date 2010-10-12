@@ -28,8 +28,8 @@ module EberTech
             FileUtils.mkdir_p(File.dirname(configuration.socket))
             FileUtils.mkdir_p(File.dirname(configuration.error_log_file))
 
-            run_command_backrgound(%Q{'#{configuration.mysqld_safe}' \
-            --datadir='#{configuration.data_dir}' \
+            run_command_background(%Q{'#{configuration.mysqld_safe}' \
+            --datadir='#{configuration.database_files_dir}' \
             --skip-networking \
             --pid-file='#{configuration.pid_file}' \
             --general-log-file='#{configuration.log_file}'  \

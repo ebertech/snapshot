@@ -7,7 +7,7 @@ module EberTech
           @subclasses << base
         end
         
-        def run_command_backrgound(command)
+        def run_command_background(command)
           fork do
             system("#{command}")
           end
