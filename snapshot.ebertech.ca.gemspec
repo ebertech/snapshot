@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{snapshot.ebertech.ca}
-  s.version = "0.1.0"
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Eberbach"]
-  s.date = %q{2010-10-06}
+  s.date = %q{2010-10-12}
   s.default_executable = %q{snapshot}
   s.email = %q{andrew@ebertech.ca}
   s.executables = ["snapshot"]
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
      "lib/ebertech/snapshot/commands/mark_dirty_command.rb",
      "lib/ebertech/snapshot/commands/remove_tag_command.rb",
      "lib/ebertech/snapshot/commands/reset_command.rb",
-     "lib/ebertech/snapshot/commands/save_snapshot_command.rb",
+     "lib/ebertech/snapshot/commands/save_command.rb",
      "lib/ebertech/snapshot/commands/start_database_command.rb",
      "lib/ebertech/snapshot/commands/stop_database_command.rb",
      "lib/ebertech/snapshot/configuration.rb",
