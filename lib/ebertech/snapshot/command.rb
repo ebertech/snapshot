@@ -8,9 +8,9 @@ module EberTech
         end
         
         def run_command_background(command)
-          fork do
-            system("#{command}")
-          end
+          require 'daemons'
+          Daemons.daemonize          
+          system("#{command}")
         end
         
         def run_command(command)

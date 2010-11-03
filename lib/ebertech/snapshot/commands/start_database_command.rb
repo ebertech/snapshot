@@ -35,8 +35,7 @@ module EberTech
             --general-log-file='#{configuration.log_file}'  \
             --log-warnings=0 \
             --log-error='#{configuration.error_log_file}' \
-            --socket='#{configuration.socket}' >/dev/null 2>&1
-            })
+            --socket='#{configuration.socket}' >/dev/null 2>&1})
             begin 
               Timeout::timeout(10) do
                 loop do
