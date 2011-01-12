@@ -13,6 +13,10 @@ module EberTech
           self
         end
         
+        def save
+          File.open(configuration_path, "w+").write(@configuration.to_yaml)
+        end
+        
         def data_dir
           File.join(Dir.getwd, @configuration["datadir"])
         end
@@ -39,6 +43,14 @@ module EberTech
         
         def port
           @configuration["port"]
+        end
+        
+        def repository
+          @configuration["repository"]
+        end
+        
+        def repository=(repository)
+          @configuration["repository"] = repository
         end
         
         def git

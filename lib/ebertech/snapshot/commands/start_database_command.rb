@@ -27,7 +27,6 @@ module EberTech
             FileUtils.mkdir_p(File.dirname(configuration.log_file))
             FileUtils.mkdir_p(File.dirname(configuration.socket))
             FileUtils.mkdir_p(File.dirname(configuration.error_log_file))
-
             run_command_background(%Q{'#{configuration.mysqld_safe}' \
             --datadir='#{configuration.database_files_dir}' \
             --skip-networking \

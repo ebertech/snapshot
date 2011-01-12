@@ -13,7 +13,7 @@ module EberTech
           end
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load
-            tag = ask_for_existing_tag(configuration)         
+            tag = ask_for_existing_tag(configuration, arguments)         
             run_command(%Q{
               cd '#{configuration.data_dir}' && \
                 '#{configuration.git}' tag -d #{tag} 

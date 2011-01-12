@@ -15,9 +15,23 @@ module EberTech
           end
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load
-            tag = ask_for_new_tag(configuration, arguments)
-            overwrite = tag_exists?(configuration, tag)
-            description = ask_for_description
+            non_interactive = false
+            tag = nil
+            description = nil
+
+            if arguments.first == "-o"
+              arguments.shift
+              tag = arguments.shift
+              description, result = run_command(%Q{
+              cd '#{configuration.data_dir}' && \
+                '#{configuration.git}' show --format=format:%s |head -n 1
+              })                
+            else
+              tag = ask_for_new_tag(configuration, arguments)
+              overwrite = tag_exists?(configuration, tag)              
+              description = ask_for_description
+            end
+            
             EberTech::Snapshot::Commands::StopDatabaseCommand.execute([])
                         
             run_command(%Q{
@@ -30,7 +44,7 @@ module EberTech
             })     
             run_command(%Q{
               cd '#{configuration.data_dir}' && \
-                '#{configuration.git}' tag "#{tag}" #{overwrite ? "-f" : ""}
+                '#{configuration.git}' tag #{overwrite ? "-f" : ""} "#{tag}"
             })               
             EberTech::Snapshot::Commands::StartDatabaseCommand.execute([])
           end

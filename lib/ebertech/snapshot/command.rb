@@ -15,7 +15,7 @@ module EberTech
 
         def run_command(command)
           result = `#{command} 2>&1`          
-          return [result, $?.to_i]
+          return [result, $?]
         end
 
         def ask_for_new_tag(configuration, arguments = [])
