@@ -34,7 +34,7 @@ module EberTech
         end
         
         def socket
-          File.join(Dir.getwd, "tmp", "snapshot_socket")
+          File.join(Dir.getwd, "tmp", "sockets", "snapshot_socket")
         end
         
         def port

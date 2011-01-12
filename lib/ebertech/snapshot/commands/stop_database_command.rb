@@ -8,7 +8,7 @@ module EberTech
       class StopDatabaseCommand < ::EberTech::Snapshot::Command
         class << self
           def command_name
-            "stop_database"
+            "stop"
           end
           def description
             %Q{Stop the database}

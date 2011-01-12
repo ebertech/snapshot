@@ -6,17 +6,17 @@ module EberTech
       class RemoveTagCommand < ::EberTech::Snapshot::Command
         class << self
           def command_name
-            "remove_tag"
+            "remove"
           end
           def description
             %Q{Removes a given tag from the repository}
           end
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load
-            raise ArgumentError.new("Must specify tag") unless arguments.size == 1            
+            tag = ask_for_existing_tag(configuration)         
             run_command(%Q{
               cd '#{configuration.data_dir}' && \
-                '#{configuration.git}' tag -d #{arguments.first} 
+                '#{configuration.git}' tag -d #{tag} 
             })     
             return $? == 0 ? 0 : 1
           end

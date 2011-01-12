@@ -25,9 +25,19 @@ module EberTech
             %Q{Resets the database to a given revision or tag. Starts and stops the db in the process.}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load
-            raise ArgumentError.new("Must specify a revision or tag") unless arguments.size == 1            
-            revision = arguments.first
+            configuration = ::EberTech::Snapshot::Configuration.load           
+            force = false
+            revision = arguments.shift
+            if revision == "-f"
+              force = true
+              revision = arguments.shift
+            end
+            revision ||= ask_for_existing_tag(configuration)     
+            
+            if force
+              EberTech::Snapshot::Commands::MarkDirtyCommand.execute([])              
+            end            
+            
             if is_clean?(revision)
               puts "it's clean!"
               return 0

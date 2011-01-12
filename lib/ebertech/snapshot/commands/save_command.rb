@@ -15,22 +15,31 @@ module EberTech
           end
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load
-            raise ArgumentError.new("Must specify a revision or tag") unless arguments.size == 1            
-            revision = arguments.first
-            EberTech::Snapshot::Commands::StopDatabaseCommand.execute([])            
+            tag = ask_for_new_tag(configuration, arguments)
+            overwrite = tag_exists?(configuration, tag)
+            description = ask_for_description
+            EberTech::Snapshot::Commands::StopDatabaseCommand.execute([])
+                        
             run_command(%Q{
               cd '#{configuration.data_dir}' && \
                 '#{configuration.git}' add .
             })     
             run_command(%Q{
               cd '#{configuration.data_dir}' && \
-                '#{configuration.git}' commit -m "#{revision}" -a
+                '#{configuration.git}' commit -m "#{description}" -a
             })     
             run_command(%Q{
               cd '#{configuration.data_dir}' && \
-                '#{configuration.git}' tag -a "#{revision}" -m "#{revision}"   
+                '#{configuration.git}' tag "#{tag}" #{overwrite ? "-f" : ""}
             })               
             EberTech::Snapshot::Commands::StartDatabaseCommand.execute([])
+          end
+          private
+          
+          def ask_for_description
+            HighLine.new.ask("Please provide a short description: ") do |q|
+              q.validate = /^.+$/
+            end
           end
         end
       end

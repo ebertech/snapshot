@@ -1,4 +1,6 @@
 require 'fileutils'
+require 'highline'
+
 
 dir = File.join(File.dirname(__FILE__), "ebertech", "snapshot", "*.rb")
 Dir.glob(dir).each do |file|

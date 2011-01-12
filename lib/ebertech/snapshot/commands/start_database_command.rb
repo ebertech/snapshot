@@ -16,7 +16,7 @@ module EberTech
       class StartDatabaseCommand < ::EberTech::Snapshot::Command
         class << self
           def command_name
-            "start_database"
+            "start"
           end
           def description
             %Q{Start the database}

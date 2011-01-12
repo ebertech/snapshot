@@ -7,6 +7,8 @@ begin
     gemspec.authors = ["Andrew Eberbach"]
     gemspec.executables = ["snapshot"]
     gemspec.files = Dir["lib/**/*.rb", "VERSION"]
+    gemspec.add_dependency  "daemons"
+    gemspec.add_dependency  "highline"
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"
