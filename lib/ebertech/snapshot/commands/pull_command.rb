@@ -1,13 +1,13 @@
 module EberTech
   module Snapshot
     module Commands
-      class PushCommand < ::EberTech::Snapshot::Command
+      class PullCommand < ::EberTech::Snapshot::Command
         class << self
           def command_name
-            "push"
+            "pull"
           end
           def description
-            %Q{Push to a remote repository}
+            %Q{Pull from a remote repository}
           end
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load
@@ -27,7 +27,12 @@ module EberTech
             end
             run_command(%Q{
               cd '#{configuration.data_dir}' && \
-                '#{configuration.git}' push -f origin master --tags
+                '#{configuration.git}' fetch -f --tags origin master
+            })   
+
+            run_command(%Q{
+              cd '#{configuration.data_dir}' && \
+                '#{configuration.git}' pull -f origin master
             })   
             
             return 0
