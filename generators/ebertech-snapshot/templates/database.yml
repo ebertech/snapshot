@@ -8,3 +8,5 @@ cucumber: &CUCUMBER
   <<: *TEST
 culerity:
   <<: *TEST
+test:
+  <<: *TEST
