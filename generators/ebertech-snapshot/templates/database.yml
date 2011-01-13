@@ -1,0 +1,10 @@
+--- 
+<%= environment_name %>: &TEST
+  username: <%= username %>
+  adapter: mysql
+  database: <%= database %>
+  socket: <%= socket %>
+cucumber: &CUCUMBER
+  <<: *TEST
+culerity:
+  <<: *TEST
