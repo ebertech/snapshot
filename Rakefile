@@ -6,7 +6,7 @@ begin
     gemspec.email = "andrew@ebertech.ca"
     gemspec.authors = ["Andrew Eberbach"]
     gemspec.executables = ["snapshot"]
-    gemspec.files = Dir["lib/**/*.rb", "VERSION"]
+    gemspec.files = Dir["lib/**/*.rb", "VERSION", "generators/**/*.rb"]
     gemspec.add_dependency  "daemons"
     gemspec.add_dependency  "highline"
   end
