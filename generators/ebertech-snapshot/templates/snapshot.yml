@@ -5,3 +5,6 @@ database_files_dir: db/test_data/database_files
 datadir: db/test_data
 git: /usr/local/bin/git
 mysql_admin: /usr/local/mysql/bin/mysqladmin
+<%- if port -%>
+port: <%= port %>
+<%- end -%>

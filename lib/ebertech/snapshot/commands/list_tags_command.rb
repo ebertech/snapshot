@@ -11,7 +11,9 @@ module EberTech
           end
           def execute(arguments)
             configuration = ::EberTech::Snapshot::Configuration.load          
-            run_command_and_output("cd #{configuration.data_dir} && #{configuration.git} tag -l")          
+            each_tag(configuration) do |tag, description|
+              puts "#{tag}: #{description}"
+            end
             return $? == 0 ? 0 : 1
           end          
         end

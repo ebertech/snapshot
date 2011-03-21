@@ -22,6 +22,15 @@ module EberTech
             %Q{Start the database}
           end
           def execute(arguments)
+            configuration = ::EberTech::Snapshot::Configuration.load                   
+            skip_networking = true
+            port = nil
+            if configuration.port
+              skip_networking = false
+              port = configuration.port
+            end
+              
+              
             configuration = ::EberTech::Snapshot::Configuration.load
             FileUtils.mkdir_p(File.dirname(configuration.pid_file))
             FileUtils.mkdir_p(File.dirname(configuration.log_file))
@@ -29,7 +38,7 @@ module EberTech
             FileUtils.mkdir_p(File.dirname(configuration.error_log_file))
             run_command_background(%Q{'#{configuration.mysqld_safe}' \
             --datadir='#{configuration.database_files_dir}' \
-            --skip-networking \
+            #{skip_networking ? "--skip-networking" : "-P #{port}"} \
             --pid-file='#{configuration.pid_file}' \
             --general-log-file='#{configuration.log_file}'  \
             --log-warnings=0 \

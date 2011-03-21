@@ -21,11 +21,8 @@ module EberTech
 
             if arguments.first == "-o"
               arguments.shift
-              tag = arguments.shift
-              description, result = run_command(%Q{
-              cd '#{configuration.data_dir}' && \
-                '#{configuration.git}' show --format=format:%s |head -n 1
-              })                
+              tag = arguments.shift                          
+              description = get_tag_description(configuration, tag)
             else
               tag = ask_for_new_tag(configuration, arguments)
               overwrite = tag_exists?(configuration, tag)              

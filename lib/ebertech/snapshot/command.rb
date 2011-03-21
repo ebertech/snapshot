@@ -55,10 +55,17 @@ module EberTech
           end          
         end 
         
+        def get_tag_description(configuration, tag)
+          output, result = run_command!(%Q{
+            cd '#{configuration.data_dir}' && \
+            '#{configuration.git}' show  -s --format=%s refs/tags/#{tag}})
+          output.strip
+        end
+        
         def ask_for_tag_with_menu(configuration)
           HighLine.new.choose do |menu|
             menu.prompt = "Specify a tag name: "
-            each_tag(configuration) do |tag|
+            each_tag(configuration) do |tag, description|
               menu.choice tag
             end
           end
@@ -67,7 +74,8 @@ module EberTech
         def each_tag(configuration)
           output, result = run_command!("cd #{configuration.data_dir} && #{configuration.git} tag -l")
           output.split("\n").sort.each do |tag|
-            yield tag.strip
+            description = get_tag_description(configuration, tag)            
+            yield tag.strip, description
           end          
         end
 
