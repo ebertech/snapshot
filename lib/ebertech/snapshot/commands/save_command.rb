@@ -18,8 +18,10 @@ module EberTech
             non_interactive = false
             tag = nil
             description = nil
+            overwrite = false
 
             if arguments.first == "-o"
+              overwrite = true
               arguments.shift
               tag = arguments.shift                          
               description = get_tag_description(configuration, tag)

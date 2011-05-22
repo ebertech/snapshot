@@ -1,8 +1,22 @@
-AfterConfiguration do |config|
-  if defined?(ActiveRecord)
-    @rails_logger = ActiveRecord::Base.logger
-    system("snapshot mark_dirty > /dev/null 2>&1")
+module EberTech
+  class CommandHelper
+    def self.run_command(command)
+      Bundler.with_clean_env do
+        output = `#{command} 2>&1`
+        unless $? == 0
+          puts "Failed running #{command}"
+          puts "Command generated output: "
+          puts output
+          raise "Aborting"
+        end
+      end
+    end
   end
+end
+
+AfterConfiguration do |config|
+  puts "[SNAPSHOT] Marking DB for cleaning"
+  EberTech::CommandHelper.run_command("snapshot mark_dirty")
 end
 
 Before do |scenario|
@@ -17,9 +31,10 @@ Before do |scenario|
     tag = tags.tag_names.detect{|t| t =~ /^@db_state/}
     if tag    
       @database_state = tag.split(".").last
-      @rails_logger.info "Resetting database to #{@database_state}" if @rails_logger
-      system("snapshot reset #{@database_state} > /dev/null 2>&1")
-      system("snapshot mark_dirty > /dev/null 2>&1")
+      puts "    [SNAPSHOT] Resetting database to #{@database_state}" 
+      EberTech::CommandHelper.run_command("snapshot reset #{@database_state}")
+      EberTech::CommandHelper.run_command("snapshot mark_dirty")
+
       ActiveRecord::Base.establish_connection    
     end
   end
@@ -27,8 +42,7 @@ end
 
 After do 
   if @database_state && ENV['CLEAN_DATABASE_AFTER_EACH']
-    @rails_logger.info "Resetting database to #{@database_state}" if @rails_logger
-    `snapshot reset #{@database_state} > /dev/null 2>&1`    
+    EberTech::CommandHelper.run_command("snapshot reset #{@database_state}")
     ActiveRecord::Base.establish_connection
   end
 end
