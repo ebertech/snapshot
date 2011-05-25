@@ -12,6 +12,8 @@ module EberTech
           end
         
           def execute(arguments)
+            Rails::Generator::Base.instance(options[:generator], args, options).command(options[:command]).invoke!
+            
             configuration = ::EberTech::Snapshot::Configuration.load
             
             FileUtils.mkdir_p(configuration.database_files_dir)
