@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "VERSION",
+    "lib/ebertech-snapshot.rb",
     "lib/ebertech/snapshot/command.rb",
     "lib/ebertech/snapshot/commands/init_command.rb",
     "lib/ebertech/snapshot/commands/list_revisions_command.rb",
@@ -34,8 +35,9 @@ Gem::Specification.new do |s|
     "lib/ebertech/snapshot/commands/stop_database_command.rb",
     "lib/ebertech/snapshot/configuration.rb",
     "lib/ebertech/snapshot/generator/snapshot_generator.rb",
+    "lib/ebertech/snapshot/generator/templates/database.yml",
     "lib/ebertech/snapshot/generator/templates/snapshot.rb",
-    "lib/snapshot.rb"
+    "lib/ebertech/snapshot/generator/templates/snapshot.yml"
   ]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.5.0}
@@ -45,16 +47,13 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<ebertech-snapshot>, [">= 0"])
       s.add_runtime_dependency(%q<rails>, ["= 3.0.5"])
       s.add_runtime_dependency(%q<highline>, [">= 0"])
     else
-      s.add_dependency(%q<ebertech-snapshot>, [">= 0"])
       s.add_dependency(%q<rails>, ["= 3.0.5"])
       s.add_dependency(%q<highline>, [">= 0"])
     end
   else
-    s.add_dependency(%q<ebertech-snapshot>, [">= 0"])
     s.add_dependency(%q<rails>, ["= 3.0.5"])
     s.add_dependency(%q<highline>, [">= 0"])
   end

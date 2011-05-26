@@ -25,7 +25,7 @@ module EberTech
             %Q{Resets the database to a given revision or tag. Starts and stops the db in the process.}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load           
+            configuration = ::EberTech::Snapshot::Configuration.new           
             force = false
             revision = arguments.shift
             if revision == "-f"

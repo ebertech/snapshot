@@ -10,7 +10,7 @@ module EberTech
             %Q{List tags in the database}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load          
+            configuration = ::EberTech::Snapshot::Configuration.new          
             each_tag(configuration) do |tag, description|
               puts "#{tag}: #{description}"
             end

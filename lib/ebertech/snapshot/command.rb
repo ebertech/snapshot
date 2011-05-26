@@ -70,11 +70,16 @@ module EberTech
             end
           end
         end
+        
+        def get_tag_revision(configuration, tag)
+          output, result = run_command!("cd #{configuration.data_dir} && #{configuration.git} rev-parse #{tag}")          
+          output.strip
+        end
 
         def each_tag(configuration)
           output, result = run_command!("cd #{configuration.data_dir} && #{configuration.git} tag -l")
           output.split("\n").sort.each do |tag|
-            description = get_tag_description(configuration, tag)            
+            description = get_tag_description(configuration, tag)                        
             yield tag.strip, description
           end          
         end
@@ -122,7 +127,7 @@ module EberTech
         end
 
         def is_clean?(revision)
-          configuration = Configuration.load
+          configuration = Configuration.new
           if File.exists?(configuration.version_file)
             File.read(configuration.version_file).strip == revision.to_s
           else

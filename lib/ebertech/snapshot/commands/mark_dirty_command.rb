@@ -13,7 +13,7 @@ module EberTech
             %Q{Marks the database as needing to be reset}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             if File.exists?(configuration.version_file)
               FileUtils.rm(configuration.version_file)
             end

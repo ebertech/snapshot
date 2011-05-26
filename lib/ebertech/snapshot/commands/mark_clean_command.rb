@@ -14,7 +14,7 @@ module EberTech
             %Q{Marks the database as at a given state}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             raise ArgumentError.new("Must specify revision or tag") unless arguments.size == 1
             if File.exists?(configuration.version_file)
               FileUtils.rm(configuration.version_file)

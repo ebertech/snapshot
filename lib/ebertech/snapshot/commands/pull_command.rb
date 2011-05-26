@@ -10,7 +10,7 @@ module EberTech
             %Q{Pull from a remote repository}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             unless configuration.repository
               configuration.repository = HighLine.new.ask("Please specify the git repo: ") do |q|
                 q.validate = /^ssh:\/\/.+$/

@@ -12,7 +12,7 @@ module EberTech
             %Q{Removes a given tag from the repository}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             tag = ask_for_existing_tag(configuration, arguments)         
             run_command(%Q{
               cd '#{configuration.data_dir}' && \

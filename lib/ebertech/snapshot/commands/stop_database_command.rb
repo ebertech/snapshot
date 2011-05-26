@@ -14,7 +14,7 @@ module EberTech
             %Q{Stop the database}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             run_command(%Q{
                 '#{configuration.mysql}' -u root \
                 --socket='#{configuration.socket}'\

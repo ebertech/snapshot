@@ -22,7 +22,7 @@ module EberTech
             %Q{Start the database}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load                   
+            configuration = ::EberTech::Snapshot::Configuration.new                   
             skip_networking = true
             port = nil
             if configuration.port
@@ -31,7 +31,7 @@ module EberTech
             end
               
               
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             FileUtils.mkdir_p(File.dirname(configuration.pid_file))
             FileUtils.mkdir_p(File.dirname(configuration.log_file))
             FileUtils.mkdir_p(File.dirname(configuration.socket))

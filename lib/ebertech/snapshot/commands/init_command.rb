@@ -14,7 +14,7 @@ module EberTech
           def execute(arguments)
             SnapshotGenerator.new.invoke(:initialize_snapshot)
             
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             
             FileUtils.mkdir_p(configuration.database_files_dir)
             

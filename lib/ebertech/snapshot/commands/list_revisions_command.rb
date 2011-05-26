@@ -10,7 +10,7 @@ module EberTech
             %Q{List revisions in the database}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load          
+            configuration = ::EberTech::Snapshot::Configuration.new          
             run_command_and_output("cd #{configuration.data_dir} && #{configuration.git} log")          
             return $? == 0 ? 0 : 1
           end          

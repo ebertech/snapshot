@@ -14,7 +14,7 @@ module EberTech
             %Q{Migrate all tags using the current migrations}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load          
+            configuration = ::EberTech::Snapshot::Configuration.new          
             each_tag(configuration) do |tag, description|
               puts "Migrating #{tag}"
               puts "Marking directory dirty"

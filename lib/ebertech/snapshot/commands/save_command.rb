@@ -14,7 +14,7 @@ module EberTech
             %Q{Saves the database to a given revision or tag. Starts and stops the db in the process.}
           end
           def execute(arguments)
-            configuration = ::EberTech::Snapshot::Configuration.load
+            configuration = ::EberTech::Snapshot::Configuration.new
             non_interactive = false
             tag = nil
             description = nil

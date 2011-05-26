@@ -7,10 +7,9 @@ etc etc.
 
 Also need to be able to re-seed.
 
-This should also be pulled out so that the generator runs by itself without having to do script/generate
+This should also be pulled out so that the generator runs by itself without having to do script/generate (DONE)
   
 General pattern for any project should be
-
 
 snapshot init (which calls the snapshot generator)
 rake db:create
