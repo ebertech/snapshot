@@ -1,39 +1,44 @@
-require 'highline'
-class SnapshotGenerator < Rails::Generator::Base
-  def manifest
-    record do |m|
-      environment_name =  ask_environment_name  
-      database = ask_database_name  
-      username = ask_database_username      
-      port = ask_port      
-      create_snapshot_support!(m)
-      create_snapshot_yml!(m, port)
-      create_database_yml!(m, environment_name, database, username, port)
-    end
+class SnapshotGenerator < Rails::Generators::Base
+  source_root File.expand_path("../templates", __FILE__)
+  attr_accessor :port
+  attr_accessor :environment_name
+  attr_accessor :username
+  attr_accessor :database
+  
+  def initialize_snapshot
+    self.environment_name =  ask_environment_name  
+    self.database = ask_database_name  
+    self.username = ask_database_username      
+    self.port = ask_port      
+
+    create_snapshot_support!
+    create_snapshot_yml!
+    create_database_yml!
   end
+
   private
 
-  def create_database_yml!(m, environment_name, database, username, port)
-    socket = File.join("tmp", "sockets", "snapshot_socket")
-    
+  def create_database_yml!
     dir = File.join("config")
     file = File.join(dir, "database.yml") 
-    m.directory dir
-    m.template "database.yml", file, :assigns => {:environment_name => environment_name, :database => database, :username => username, :socket => socket, :port => port}      
-  end  
 
-  def create_snapshot_support!(m)
-    dir = File.join("features", "support")
-    file = File.join(dir, "snapshot.rb") 
-    m.directory dir
-    m.template "snapshot.rb", file       
+    template "database.yml", file
+  end  
+  
+  def socket
+    File.join("tmp", "sockets", "snapshot_socket")
   end
 
-  def create_snapshot_yml!(m, port)
+  def create_snapshot_support!
+    dir = File.join("features", "support")
+    file = File.join(dir, "snapshot.rb") 
+    template "snapshot.rb", file       
+  end
+
+  def create_snapshot_yml!
     dir = File.join("config")
     file = File.join(dir, "snapshot.yml") 
-    m.directory dir
-    m.template "snapshot.yml", file, :assigns => {:port => port}      
+    template "snapshot.yml", file
   end
 
   def ask_database_name
@@ -43,7 +48,7 @@ class SnapshotGenerator < Rails::Generator::Base
       end
     end
   end
-  
+
   def ask_port
     HighLine.new.ask("Port to listen on (leave blank to disable): ") do |question|
       question.default = ""

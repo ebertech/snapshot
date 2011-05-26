@@ -7,7 +7,7 @@ begin
     gemspec.authors = ["Andrew Eberbach"]
     gemspec.executables = ["snapshot"]
     gemspec.files = Dir["lib/**/*.rb", "VERSION", "generators/**/*.rb", "generators/**/*.yml"]
-    gemspec.add_dependency  "daemons"
+    gemspec.add_dependency  "rails", "3.0.5"
     gemspec.add_dependency  "highline"
   end
 rescue LoadError
