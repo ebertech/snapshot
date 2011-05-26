@@ -1,1 +1,0 @@
-gem 'ebertech-snapshot', :path => "/Users/ame/Current/ebertech-snapshot"

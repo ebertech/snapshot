@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'highline'
-require 'bundler/setup'
 require 'rails/generators'
 
 require 'fileutils'
