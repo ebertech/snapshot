@@ -71,6 +71,37 @@ module EberTech
       def version_file
         File.join(data_dir, "clean.txt")
       end  
+      
+      def create_database_command
+        %Q{
+          '#{mysql_install_db}' \
+            --datadir='#{database_files_dir}'  \
+            --ldata='#{database_files_dir}'
+        }        
+      end
+      
+      
+      def configuration_path
+        @configuration_path ||= File.join("config", "snapshot.yml")
+      end
+      
+      def database_yml_path
+        @database_yml_path ||= File.join("config", "database.yml")          
+      end
+      
+      
+      def create_git_repository_command
+        %Q{
+          cd '#{data_dir}' && \
+            '#{git}' init && \
+            '#{git}' add . && \
+            '#{git}' commit -m 'initial commit'
+        }
+      end      
+      
+      def prepare!
+        FileUtils.mkdir_p(database_files_dir)        
+      end
     end
   end
 end

@@ -3,3 +3,4 @@ config
 tmp
 log
 db
+.idea
