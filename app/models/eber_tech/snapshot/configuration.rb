@@ -8,10 +8,6 @@ module EberTech
         @working_dir = File.expand_path("../..", configuration_path)
       end
 
-      def save
-        File.open(configuration_path, "w+").write(@configuration.to_yaml)
-      end
-
       def data_dir
         File.join(@working_dir, @configuration["datadir"])
       end
@@ -48,10 +44,6 @@ module EberTech
         @configuration["repository"] = repository
       end
 
-      def git
-        @configuration["git"]
-      end
-
       def mysql
         @configuration["mysql"]
       end
@@ -59,9 +51,13 @@ module EberTech
       def mysql_install_db
         @configuration["mysql_install_db"]
       end
+      
+      def mysql_base_dir
+        "/usr/local/Cellar/mysql/5.5.19"
+      end
 
-      def mysql_admin
-        @configuration["mysql_admin"]
+      def mysqladmin
+        @configuration["mysqladmin"]
       end
 
       def mysqld_safe
@@ -72,35 +68,12 @@ module EberTech
         File.join(data_dir, "clean.txt")
       end  
       
-      def create_database_command
-        %Q{
-          '#{mysql_install_db}' \
-            --datadir='#{database_files_dir}'  \
-            --ldata='#{database_files_dir}'
-        }        
-      end
-      
-      
       def configuration_path
         @configuration_path ||= File.join("config", "snapshot.yml")
       end
       
       def database_yml_path
         @database_yml_path ||= File.join("config", "database.yml")          
-      end
-      
-      
-      def create_git_repository_command
-        %Q{
-          cd '#{data_dir}' && \
-            '#{git}' init && \
-            '#{git}' add . && \
-            '#{git}' commit -m 'initial commit'
-        }
-      end      
-      
-      def prepare!
-        FileUtils.mkdir_p(database_files_dir)        
       end
     end
   end

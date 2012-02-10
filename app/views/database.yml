@@ -4,6 +4,7 @@
   adapter: mysql
   database: <%= database %>
   socket: <%= socket %>
+  encoding: utf8
   <%- if port -%>
   port: <%= port %>
   <%- end -%>

@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
   # s.add_runtime_dependency "rest-client"
-  s.add_runtime_dependency  "rails", "~> 3.0"
-  s.add_runtime_dependency  "highline"
-  s.add_runtime_dependency  "clamp"  
+  s.add_runtime_dependency  "git"
+  s.add_runtime_dependency  "activesupport"
+  s.add_runtime_dependency  "ebertech-commandline"
 end

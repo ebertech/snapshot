@@ -1,0 +1,9 @@
+mysql_install_db: <%= mysql_install_db %>
+mysqld_safe: <%= mysqld_safe %>
+mysql: <%= mysql %>
+database_files_dir: db/test_data/database_files
+datadir: db/test_data
+mysqladmin: <%= mysqladmin %>
+<%- if port -%>
+port: <%= port %>
+<%- end -%>

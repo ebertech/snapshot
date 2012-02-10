@@ -1,19 +1,3 @@
-module EberTech
-  class CommandHelper
-    def self.run_command(command)
-      Bundler.with_clean_env do
-        output = `#{command} 2>&1`
-        unless $? == 0
-          puts "Failed running #{command}"
-          puts "Command generated output: "
-          puts output
-          raise "Aborting"
-        end
-      end
-    end
-  end
-end
-
 AfterConfiguration do |config|
   puts "[SNAPSHOT] Marking DB for cleaning"
   EberTech::CommandHelper.run_command("snapshot mark_dirty")
