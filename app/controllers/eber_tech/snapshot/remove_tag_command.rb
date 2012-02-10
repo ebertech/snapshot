@@ -2,9 +2,11 @@
 # cd db/test_data && git tag -d $1
 module EberTech
   module Snapshot
-    class RemoveTagCommand < Clamp::Command
+    class RemoveTagCommand < AbstractCommand
+      parameter "TAG", "target tag", :default => nil
+
       def execute
-        Database.current.remove_tag!(tag)
+        database.remove_tag!(tag, force?)
       end          
     end
   end

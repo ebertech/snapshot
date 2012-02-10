@@ -3,9 +3,9 @@
 # cd db/test_data && echo -n "$1" > clean.txt
 module EberTech
   module Snapshot
-    class MarkCleanCommand < Clamp::Command
+    class MarkCleanCommand < AbstractCommand
       def execute
-        Database.current.mark_clean!
+        database.mark_clean!
       end          
     end
   end

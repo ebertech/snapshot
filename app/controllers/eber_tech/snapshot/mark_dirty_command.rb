@@ -2,9 +2,9 @@
 # # cd db/test_data && rm -f clean.txt
 module EberTech
   module Snapshot
-    class MarkDirtyCommand < Clamp::Command
+    class MarkDirtyCommand < AbstractCommand
       def execute
-        Database.current.mark_dirty!
+        database.mark_dirty!
       end          
     end
   end

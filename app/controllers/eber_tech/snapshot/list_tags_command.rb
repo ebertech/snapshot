@@ -1,9 +1,9 @@
 module EberTech
   module Snapshot
-    class ListTagsCommand < Clamp::Command
+    class ListTagsCommand < AbstractCommand
       def execute
-        Database.current.tags.each do |tag|
-          puts "#{tag.name}: #{tag.description}"          
+        database.each_tag do |tag, message|
+          puts "#{tag}\t\t#{message}"          
         end
       end          
     end

@@ -2,9 +2,9 @@
 # cd /usr/local/mysql && sudo bin/mysqladmin shutdown
 module EberTech
   module Snapshot
-    class StopDatabaseCommand < Clamp::Command
+    class StopDatabaseCommand < AbstractCommand
       def execute
-        Database.current.stop!
+        database.stop!
       end          
     end
   end

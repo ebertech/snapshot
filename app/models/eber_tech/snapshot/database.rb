@@ -11,6 +11,22 @@ module EberTech
         configuration.git.log.each{|l| yield l.sha,l.message }
       end
       
+      def each_tag
+        configuration.git.tags.each do |tag|          
+          yield tag.name, configuration.git.gcommit(tag.objectish).message
+        end
+      end
+      
+      def mark_clean!
+        raise ArgumentError.new("Must specify revision or tag") unless arguments.size == 1
+        if File.exists?(configuration.version_file)
+          FileUtils.rm(configuration.version_file)
+        end
+        File.open(configuration.version_file, "w+") do |f|
+          f << arguments.first
+        end        
+      end      
+      
       def stop!
         configuration = ::EberTech::Snapshot::Configuration.new
         run_command(%Q{
@@ -65,17 +81,7 @@ module EberTech
         end
       end
       
-      def mark_clean!
-        configuration = ::EberTech::Snapshot::Configuration.new
-        raise ArgumentError.new("Must specify revision or tag") unless arguments.size == 1
-        if File.exists?(configuration.version_file)
-          FileUtils.rm(configuration.version_file)
-        end
-        File.open(configuration.version_file, "w+") do |f|
-          f << arguments.first
-        end
-        
-      end
+
       
       def pull!
         configuration = ::EberTech::Snapshot::Configuration.new

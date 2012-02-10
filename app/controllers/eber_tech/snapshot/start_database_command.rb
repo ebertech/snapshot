@@ -12,9 +12,9 @@
 require 'timeout'
 module EberTech
   module Snapshot
-    class StartDatabaseCommand < Clamp::Command
+    class StartDatabaseCommand < AbstractCommand
       def execute
-        Database.current.start!
+        database.start!
       end          
     end
   end

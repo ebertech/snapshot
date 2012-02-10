@@ -4,9 +4,12 @@
 # /Users/ame/sbin/start_mysql > /dev/null 2>&1
 module EberTech
   module Snapshot
-    class SaveCommand < Clamp::Command
+    class SaveCommand < AbstractCommand
+      parameter "TAG", "target tag", :default => nil
+      option "--overwrite", :overwrite, "Overwrite the tag if it exists", :default => false
+      
       def execute
-        Database.current.save_tag!(tag, overwrite)
+        database.save_tag!(tag, overwrite?)
       end       
     end
   end

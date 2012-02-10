@@ -15,9 +15,11 @@
 # fi
 module EberTech
   module Snapshot
-    class ResetCommand < Clamp::Command
+    class ResetCommand < AbstractCommand
+      parameter "TAG", "target tag", :default => nil
+
       def execute
-        Database.current.reset_to!(tag, force)
+        database.reset_to!(tag, force?)
       end          
     end
   end

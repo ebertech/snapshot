@@ -3,9 +3,9 @@
 # 
 module EberTech
   module Snapshot
-    class MigrateCommand < Clamp::Command
+    class MigrateCommand < AbstractCommand
       def execute
-        Database.current.migrate!
+        database.migrate!
       end          
     end
   end

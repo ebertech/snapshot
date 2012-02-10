@@ -4,6 +4,7 @@ module EberTech
       attr_accessor :database
       
       option "--dry-run", :flag, "Dry run"  
+      option "--force", :flag, "Force the operation", :default => false
       
       def initialize(*args)
         super

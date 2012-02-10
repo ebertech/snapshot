@@ -1,8 +1,8 @@
 module EberTech
   module Snapshot
-    class PullCommand < Clamp::Command
+    class PullCommand < AbstractCommand
       def execute
-        Database.current.pull!
+        database.pull!
       end       
     end
   end

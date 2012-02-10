@@ -1,8 +1,8 @@
 module EberTech
   module Snapshot
-    class PushCommand < Clamp::Command
+    class PushCommand < AbstractCommand
       def execute
-        Database.current.push!      
+        database.push!      
       end   
     end
   end
