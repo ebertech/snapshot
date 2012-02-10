@@ -1,9 +1,9 @@
 module EberTech
   module Snapshot
-    class ListRevisionsCommand < Clamp::Command
+    class ListRevisionsCommand < AbstractCommand
       def execute
-        Database.current.revisions.each do |revision|
-          puts "#{revision.name}: #{revision.description}"          
+        database.each_revision do |sha1, message|
+          puts "#{sha1}\t\t#{message}"          
         end        
       end          
     end

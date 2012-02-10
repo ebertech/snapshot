@@ -7,6 +7,14 @@ module EberTech
         @configuration = YAML.load(File.read(configuration_path))          
         @working_dir = File.expand_path("../..", configuration_path)
       end
+      
+      def database
+        Database.new(self)
+      end
+      
+      def git
+        Git.open(data_dir)
+      end
 
       def data_dir
         File.join(@working_dir, @configuration["datadir"])

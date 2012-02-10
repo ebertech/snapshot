@@ -1,6 +1,16 @@
 module EberTech
   module Snapshot
     class Database
+      attr_accessor :configuration
+      
+      def initialize(configuration)
+        self.configuration = configuration
+      end
+      
+      def each_revision
+        configuration.git.log.each{|l| yield l.sha,l.message }
+      end
+      
       def stop!
         configuration = ::EberTech::Snapshot::Configuration.new
         run_command(%Q{

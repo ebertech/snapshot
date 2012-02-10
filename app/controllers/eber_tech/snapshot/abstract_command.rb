@@ -7,7 +7,7 @@ module EberTech
       
       def initialize(*args)
         super
-        
+        self.database = Configuration.new.database
       end
       
     end
