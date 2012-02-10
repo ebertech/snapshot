@@ -4,8 +4,10 @@
 module EberTech
   module Snapshot
     class MarkCleanCommand < AbstractCommand
+      parameter "TAG", "target tag", :default => nil      
+      
       def execute
-        database.mark_clean!
+        database.mark_clean!(tag)
       end          
     end
   end

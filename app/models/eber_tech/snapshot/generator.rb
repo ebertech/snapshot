@@ -18,6 +18,11 @@ class EberTech::Snapshot::Generator < Thor::Group
     
     create_database
     create_git_repository
+    
+    empty_directory File.dirname(pid_file)
+    empty_directory File.dirname(log_file)
+    empty_directory File.dirname(socket)
+    empty_directory File.dirname(error_log_file)    
   end
 
   def pretend?

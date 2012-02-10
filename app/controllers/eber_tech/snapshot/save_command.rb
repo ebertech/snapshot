@@ -6,10 +6,9 @@ module EberTech
   module Snapshot
     class SaveCommand < AbstractCommand
       parameter "TAG", "target tag", :default => nil
-      option "--overwrite", :overwrite, "Overwrite the tag if it exists", :default => false
       
       def execute
-        database.save_tag!(tag, overwrite?)
+        database.save_tag!(tag, force?)
       end       
     end
   end
