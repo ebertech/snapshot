@@ -6,7 +6,7 @@ module EberTech
       parameter "TAG", "target tag", :default => nil
 
       def execute
-        database.remove_tag!(tag, force?)
+        database.remove_tag!(tag, base_options)
       end          
     end
   end

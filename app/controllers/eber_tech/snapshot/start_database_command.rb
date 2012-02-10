@@ -14,7 +14,7 @@ module EberTech
   module Snapshot
     class StartDatabaseCommand < AbstractCommand
       def execute
-        database.start!
+        database.start!(base_options)
       end          
     end
   end

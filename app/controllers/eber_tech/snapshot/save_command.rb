@@ -8,7 +8,7 @@ module EberTech
       parameter "TAG", "target tag", :default => nil
       
       def execute
-        database.save_tag!(tag, force?)
+        database.save_tag!(tag, base_options)
       end       
     end
   end

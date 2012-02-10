@@ -4,7 +4,7 @@ module EberTech
   module Snapshot
     class StopDatabaseCommand < AbstractCommand
       def execute
-        database.stop!
+        database.stop!(base_options)
       end          
     end
   end

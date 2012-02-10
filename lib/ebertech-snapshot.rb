@@ -5,6 +5,8 @@ require 'clamp'
 require 'fileutils'
 require 'thor/group'
 require 'ebertech-commandline'
+require 'rake'
+require 'yaml'
 require 'active_support'
 require 'active_support/dependencies'
 

@@ -19,7 +19,7 @@ module EberTech
       parameter "TAG", "target tag", :default => nil
 
       def execute
-        database.reset_to!(tag, force?)
+        database.reset_to!(tag, base_options)
       end          
     end
   end

@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency  "git"
   s.add_runtime_dependency  "activesupport"
   s.add_runtime_dependency  "ebertech-commandline"
+  s.add_runtime_dependency "rake"
 end

@@ -7,7 +7,7 @@ module EberTech
       parameter "TAG", "target tag", :default => nil      
       
       def execute
-        database.mark_clean!(tag)
+        database.mark_clean!(tag, base_options)
       end          
     end
   end

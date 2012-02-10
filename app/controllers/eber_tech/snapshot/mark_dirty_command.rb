@@ -4,7 +4,7 @@ module EberTech
   module Snapshot
     class MarkDirtyCommand < AbstractCommand
       def execute
-        database.mark_dirty!
+        database.mark_dirty!(base_options)
       end          
     end
   end

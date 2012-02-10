@@ -5,7 +5,7 @@ module EberTech
   module Snapshot
     class MigrateCommand < AbstractCommand
       def execute
-        database.migrate!
+        database.migrate!(base_options)
       end          
     end
   end
