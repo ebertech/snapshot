@@ -16,7 +16,7 @@
 module EberTech
   module Snapshot
     class ResetCommand < AbstractCommand
-      parameter "TAG", "target tag", :default => nil
+      parameter "[TAG]", "target tag", :default => nil
 
       def execute
         database.reset_to!(tag, base_options)

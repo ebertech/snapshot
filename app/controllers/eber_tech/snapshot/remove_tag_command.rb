@@ -3,7 +3,7 @@
 module EberTech
   module Snapshot
     class RemoveTagCommand < AbstractCommand
-      parameter "TAG", "target tag", :default => nil
+      parameter "[TAG]", "target tag", :default => nil
 
       def execute
         database.remove_tag!(tag, base_options)

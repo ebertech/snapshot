@@ -2,20 +2,17 @@
 #Max packetlength to send/receive from to server.
 max_allowed_packet=64M
 datadir=<%= database_files_dir %>
-<% if port.nil? %>
-skip-networking
-<% else %>
-port = <%= port %>
-<% end %>
+
+
 socket = <%= socket %>
-general-log-file=<%= log_file%>
-log-error=<%= error_log_file %> 
-character-set-server = utf8
-pid-file=<%= pid_file %> 
-log-warnings=0
+general_log_file=<%= log_file%>
+log_error=<%= error_log_file %> 
+character_set_server = utf8
+pid_file=<%= pid_file %> 
+log_warnings=0
 
 #This option makes InnoDB to store each created table into its own .ibd file.
-innodb_file_per_table
+innodb_file_per_table=1
 
 [mysqladmin]
 socket = <%= socket %>

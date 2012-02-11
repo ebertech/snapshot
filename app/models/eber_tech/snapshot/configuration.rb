@@ -9,7 +9,7 @@ module EberTech
                
       def initialize(configuration_path = File.join("config", "snapshot.yml"))
         raise "no such file #{configuration_path}. Run snapshot create_config to create." unless File.exists?(configuration_path)
-        @configuration = YAML.load(File.read(configuration_path))          
+        @configuration = YAML.load(File.read(configuration_path)).with_indifferent_access      
         @working_dir = File.expand_path("../..", configuration_path)
       end
       
@@ -49,6 +49,10 @@ module EberTech
       def socket
         File.join(@working_dir, "tmp", "sockets", "snapshot_socket")
       end
+      
+      def mysql_defaults_path
+        File.join(database_files_dir, "my.cnf")
+      end      
 
       def repository=(repository)
         @configuration["repository"] = repository
@@ -60,8 +64,8 @@ module EberTech
       end
       
       def method_missing(method, *args)
-        if @configuration[method.to_s]
-          @configuration[method.to_s]
+        if @configuration.has_key?(method)
+          @configuration[method]
         else
           super
         end

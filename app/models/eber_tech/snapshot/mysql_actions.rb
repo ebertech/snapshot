@@ -3,43 +3,75 @@ module EberTech
     module MysqlActions
       class MysqlBaseAction
         attr_accessor :base
+        def initialize(base, *args)
+          self.base = base
+        end        
       end
       
-      class MysqlAdminStop < MysqlBaseAction
+      class MysqlAdminStop < MysqlBaseAction     
+        attr_accessor :mysqladmin, :defaults_file
+        
+        def initialize(base, mysqladmin, defaults_file, config = {})
+          super
+          self.mysqladmin = mysqladmin
+          self.defaults_file = defaults_file
+        end        
+           
         def invoke!
-          base.run mysqladmin, [%Q{--defaults-file=#{defaults_file}'}, "shutdown"]                  
+          base.run mysqladmin, [%Q{--defaults-file='#{defaults_file}'}, "shutdown"]                  
         end
       end
       
       class MysqlAdminStart < MysqlBaseAction
+        attr_accessor :mysqld_safe, :mysqladmin, :defaults_file, :port
+        
+        def initialize(base, mysqld_safe, mysqladmin, defaults_file, port, config = {})
+          super
+          self.mysqld_safe = mysqld_safe
+          self.mysqladmin = mysqladmin
+          self.defaults_file = defaults_file
+          self.port = port
+        end        
+        
         def invoke!
-          base.run mysqld_safe, [%Q{--defaults-file=#{defaults_file}'}]    
-          begin 
+          args = [%Q{--defaults-file='#{defaults_file}'}]
+          args << "--skip-networking" if port.blank?
+          return if base.pretend?
+          base.run_in_background mysqld_safe, args    
+          
+          wait_until(10) do
+            base.run mysqladmin, [%Q{--defaults-file='#{defaults_file}'}, "status"]
+          end                
+        end
+        
+        def wait_until(timeout)
+          begin
             Timeout::timeout(10) do
               loop do
-                run_command(%Q{'#{mysqladmin}' --defaults-file=#{defaults_file}' status})              
-                return 0 if $? == 0
+                yield    
+                return if $? == 0
+                sleep 1
               end
-            end
-          rescue 
-            return 1
-          end                        
+            end            
+          rescue
+            raise "Timed out"
+          end
         end
       end      
 
       class MysqlAdminGrantAccess
-        attr_accessor :base, :socket, :mysql, :user
+        attr_accessor :base, :mysql, :defaults_file, :user
 
-        def initialize(base, mysql, socket, user, config = {})
+        def initialize(base, mysql, defaults_file, user, config = {})
           self.base = base
-          self.socket = socket
           self.mysql = mysql
+          self.defaults_file = defaults_file
           self.user = user
         end
 
         def invoke!      
           base.say_status :mysql, "Granting admin access to current user"
-          base.run(mysql, ["-u root", "--defaults-file=#{defaults_file}'", %Q{-e "grant shutdown on *.* to #{user}@localhost"}])
+          base.run(mysql, ["--defaults-file='#{defaults_file}'", "-u root", %Q{-e "grant shutdown on *.* to #{user}@localhost"}])
         end    
       end
 
@@ -53,22 +85,27 @@ module EberTech
           self.mysql_base_dir = mysql_base_dir   
         end
 
-        def invoke!      
-          #TODO check for existing, ask for overwrite
-          #check for pretend
+        def invoke!                
           base.say_status :mysql, "Creating database"
           base.run(mysql_install_db, ["--datadir='#{database_files_dir}'", "--ldata='#{database_files_dir}'", "--basedir='#{mysql_base_dir}'"])
         end
       end
       
-      def create_database
-        action MysqlAdminCreateDatabase.new(self, mysql_install_db, database_files_dir, mysql_base_dir, mysql, socket, user)
+      def create_database!(mysql_install_db, database_files_dir, mysql_base_dir, options = {})
+        action MysqlAdminCreateDatabase.new(self, mysql_install_db, database_files_dir, mysql_base_dir)
       end
 
-      def grant_access
-        action MysqlAdminGrantAccess.new(self, mysql, socket, user)    
+      def grant_access!(mysql, defaults_file, user, options = {})
+        action MysqlAdminGrantAccess.new(self, mysql, defaults_file, user)    
       end      
       
+      def stop_database!(mysqladmin, defaults_file, options = {})
+        action MysqlAdminStop.new(self, mysqladmin, defaults_file, options = {})
+      end
+
+      def start_database!(mysqld_safe, mysqladmin, defaults_file, port, options = {})
+        action MysqlAdminStart.new(self, mysqld_safe, mysqladmin, defaults_file, port, options = {})
+      end
     end
   end
 end

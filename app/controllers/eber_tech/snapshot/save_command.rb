@@ -5,10 +5,11 @@
 module EberTech
   module Snapshot
     class SaveCommand < AbstractCommand
-      parameter "TAG", "target tag", :default => nil
+      parameter "[TAG]", "target tag", :default => nil
+      option "--description", "description for commit", :default => nil
       
       def execute
-        database.save_tag!(tag, base_options)
+        database.save_tag!(tag, description, base_options)
       end       
     end
   end

@@ -3,7 +3,7 @@ Probably should put things into a proper API so that you can just call
 Snapshot.reset_to!(tag)
 Snapshot.mark_dirty!
 
-etc etc.
+etc etc. (DONE)
 
 Also need to be able to re-seed.
 
@@ -15,6 +15,8 @@ snapshot init (which calls the snapshot generator)
 rake db:create
 rake db:migrate
 snapshot save schema_loaded
+ (DONE)
+
 rake db:seed
 snapshot save seeded
 

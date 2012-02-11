@@ -1,12 +1,11 @@
 module EberTech
   module Snapshot
     module RakeActions
-
       def rake_task(name)
-            say_status :snapshot,  "Running rake db:migrate", :green        
+        say_status :rake,  name, :green        
         Rake.application.init
         Rake.application.load_rakefile
-        Rake::Task["db:migrate"].invoke
+        Rake::Task[name].invoke
       end
     end
   end
