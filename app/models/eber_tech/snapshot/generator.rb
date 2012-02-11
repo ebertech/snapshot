@@ -51,7 +51,6 @@ class EberTech::Snapshot::Generator < Thor::Group
         self.username = config[:username]  
       end
     else
-      self.environment_name =  ask_environment_name  
       self.database = ask_database_name  
       self.username = ask_database_username    
       template "database.yml", database_yml_path 
@@ -71,7 +70,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       configuration.database.grant!
 
       rake_task "db:create"
-      rake_task "db:migrate"    
+      rake_task "db:schema:load"    
       create_git_repository
       configuration.database.save_tag!("schema_loaded", "The schema is clean")  
       configuration.database.stop!

@@ -9,7 +9,7 @@ module EberTech
       
       def initialize(*args)
         super
-        self.database = Configuration.new.database
+        self.database = Configuration.load.try(:database)
       end
       
       def base_options        
