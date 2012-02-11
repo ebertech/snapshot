@@ -1,7 +1,7 @@
 database = EberTech::Snapshot::Configuration.load.database
 
 AfterConfiguration do |config|
-  database.mark_dirty
+  database.mark_dirty!
 end
 
 Before do |scenario|
@@ -16,7 +16,7 @@ Before do |scenario|
     tag = tags.tag_names.detect{|t| t =~ /^@db_state/}
     if tag    
       @database_state = tag.split(".").last
-      database.reset!(@database_state)
+      database.reset_to!(@database_state)
       database.mark_dirty!
       ActiveRecord::Base.establish_connection    
     end
@@ -25,7 +25,7 @@ end
 
 After do 
   if @database_state && ENV['CLEAN_DATABASE_AFTER_EACH']    
-    database.reset!(database_state)    
+    database.reset_to!(database_state)    
     ActiveRecord::Base.establish_connection
   end
 end

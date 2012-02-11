@@ -13,7 +13,11 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/module/delegation.rb'
 
 %w{models modules controllers}.each do |path|
-  ActiveSupport::Dependencies.autoload_paths << File.expand_path(File.join("..", "..", "app", path), __FILE__)
+  if ActiveSupport::Dependencies.respond_to?(:autoload_paths)
+    ActiveSupport::Dependencies.autoload_paths << File.expand_path(File.join("..", "..", "app", path), __FILE__)
+  else
+    ActiveSupport::Dependencies.load_paths << File.expand_path(File.join("..", "..", "app", path), __FILE__)
+  end
 end
 
 Git::Base.class_eval do
