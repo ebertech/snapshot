@@ -1,31 +1,49 @@
 database = EberTech::Snapshot::Configuration.load.database
 
+EberTech::Snapshot::Database.class_eval do
+  MARKER = /^@!/
+  def reset_before_scenario(scenario)
+    with_tagged_scenario(scenario) do |tag|
+      reset_to!(tag)
+      mark_dirty!
+      ActiveRecord::Base.establish_connection          
+    end
+  end
+
+  def with_tagged_scenario(scenario)
+    tag = scenario.tag_names.detect{|tag_name| tag_name =~ MARKER}
+    if tag    
+      tag = tag.gsub(MARKER, "") 
+      if tag_exists?(tag)
+        yield tag
+      else
+        say_status :snapshot, "No such tag: #{tag}, ignoring", :yellow
+      end
+    end    
+  end
+
+  def reset_after_scenario(scenario)
+    with_tagged_scenario(scenario) do |tag|
+      reset_to!(tag)      
+      ActiveRecord::Base.establish_connection
+    end
+  end
+end
+
+Cucumber::Ast::Scenario.class_eval do
+  def tag_names
+    @tags && @tags.instance_eval{ @tag_names }
+  end
+end
+
 AfterConfiguration do |config|
   database.mark_dirty!
 end
 
 Before do |scenario|
-  def scenario.tags 
-    @tags
-  end
-  tags = scenario.tags
-  if tags
-    def tags.tag_names
-      @tag_names
-    end
-    tag = tags.tag_names.detect{|t| t =~ /^@db_state/}
-    if tag    
-      @database_state = tag.split(".").last
-      database.reset_to!(@database_state)
-      database.mark_dirty!
-      ActiveRecord::Base.establish_connection    
-    end
-  end
+  database.reset_before_scenario(scenario)
 end
 
-After do 
-  if @database_state && ENV['CLEAN_DATABASE_AFTER_EACH']    
-    database.reset_to!(database_state)    
-    ActiveRecord::Base.establish_connection
-  end
+After do |scenario|
+  database.reset_after_scenario(scenario)
 end

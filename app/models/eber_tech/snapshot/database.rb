@@ -164,7 +164,11 @@ module EberTech
           end
         end
       end      
-
+      
+      def tag_exists?(tag)
+        !!git.tags.detect{|t| t.name == tag}
+      end      
+      
       private
       
       delegate :mysql_install_db, :database_files_dir, :mysqld_safe, :mysqladmin, :socket, :git, :mysql_defaults_path,:mysql_base_dir, :port, :mysql, :user, :version_file, :pid_file, :to => :configuration
@@ -232,11 +236,7 @@ module EberTech
       def remote_origin_exists?
         git.remotes.first.present?
       end  
-      
-      def tag_exists?(tag)
-        !!git.tags.detect{|t| t.name == tag}
-      end      
-      
+            
       def get_tag_description(target)
         each_tag do |tag, description|
           return description if tag == target
