@@ -23,6 +23,12 @@ EberTech::Snapshot::Database.class_eval do
       end
     end    
   end
+  
+  def reset_after_cucumber_configuration
+    shell.mute do
+      mark_dirty!
+    end
+  end
 
   def reset_after_scenario(scenario)
     with_tagged_scenario(scenario) do |tag|
@@ -41,7 +47,7 @@ Cucumber::Ast::Scenario.class_eval do
 end
 
 AfterConfiguration do |config|
-  database.mark_dirty!
+  database.reset_after_cucumber_configuration
 end
 
 Before do |scenario|
