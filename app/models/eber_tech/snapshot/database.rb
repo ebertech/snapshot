@@ -21,6 +21,12 @@ module EberTech
           yield tag.name, git.gcommit(tag.objectish).message
         end
       end
+      
+      def each_tag_with_revision
+        git.tags.each do |tag|          
+          yield tag.name, git.gcommit(tag.objectish).message, tag.objectish
+        end        
+      end
 
       def mark_clean!(tag, options = {})
         File.open(version_file, "w+") do |f|
@@ -48,7 +54,18 @@ module EberTech
       end
 
       def stop!(options = {})
-        stop_database! mysqladmin, mysql_defaults_path, options 
+        if is_running?
+          stop_database! mysqladmin, mysql_defaults_path, options
+        end
+        if is_running?
+          force_quit!(options)
+        end
+        print_status(options)
+      end
+      
+      def force_quit!(options = {})
+        say_status :kill, "Forcefully killing database"
+        Process.kill(9, get_process_id) rescue nil
       end
 
       def create!(options = {})
@@ -58,9 +75,22 @@ module EberTech
       def grant!(options = {})
         grant_access! mysql, mysql_defaults_path, user, options
       end
+      
+      def print_status(options = {})
+        if is_running?
+          say_status :snapshot, "Database is running at #{get_process_id}", :green
+          exit 0
+        else
+          say_status :snapshot, "Database is not running", :red
+          exit 1
+        end        
+      end
 
       def start!(options = {})
-        start_database! mysqld_safe, mysqladmin, mysql_defaults_path, port, options
+        unless is_running?
+          start_database! mysqld_safe, mysqladmin, mysql_defaults_path, port, options
+        end
+        print_status(options)
       end
 
       def pull!(options = {})
@@ -103,9 +133,19 @@ module EberTech
         git.remove_tag(tag)        
       end
 
+      def is_running?        
+        return false unless get_process_id
+        !!Process.getpgid(get_process_id) rescue false
+      end
+      
+      def get_process_id
+        return false unless File.exists?(pid_file)
+        File.read(pid_file).lines.first.strip.to_i
+      end
+
       def reset_to!(revision, options = {})
         force = options[:force]       
-        revision ||= ask_for_existing_tag     
+        revision ||= ask_for_existing_tag(revision)     
 
         if force
           mark_dirty!           
@@ -127,7 +167,7 @@ module EberTech
 
       private
       
-      delegate :mysql_install_db, :database_files_dir, :mysqld_safe, :mysqladmin, :socket, :git, :mysql_defaults_path,:mysql_base_dir, :port, :mysql, :user, :version_file, :to => :configuration
+      delegate :mysql_install_db, :database_files_dir, :mysqld_safe, :mysqladmin, :socket, :git, :mysql_defaults_path,:mysql_base_dir, :port, :mysql, :user, :version_file, :pid_file, :to => :configuration
 
       def with_stopped_database(options = {})
         stop!(options)

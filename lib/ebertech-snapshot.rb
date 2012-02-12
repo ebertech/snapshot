@@ -15,6 +15,7 @@ require 'active_support/core_ext/module/delegation.rb'
 %w{models modules controllers}.each do |path|
   if ActiveSupport::Dependencies.respond_to?(:autoload_paths)
     ActiveSupport::Dependencies.autoload_paths << File.expand_path(File.join("..", "..", "app", path), __FILE__)
+    require 'active_support/core_ext/object/try.rb'
   else
     ActiveSupport::Dependencies.load_paths << File.expand_path(File.join("..", "..", "app", path), __FILE__)
   end
