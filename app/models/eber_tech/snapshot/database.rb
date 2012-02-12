@@ -79,10 +79,10 @@ module EberTech
       def print_status(options = {})
         if is_running?
           say_status :snapshot, "Database is running at #{get_process_id}", :green
-          exit 0
+          true
         else
           say_status :snapshot, "Database is not running", :red
-          exit 1
+          false
         end        
       end
 
