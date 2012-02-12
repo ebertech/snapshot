@@ -23,7 +23,7 @@ module EberTech
       end
       
       class MysqlAdminStart < MysqlBaseAction
-        attr_accessor :mysqld_safe, :mysqladmin, :defaults_file, :port
+        attr_accessor :mysqld_safe, :mysqladmin, :defaults_file, :port, :config
         
         def initialize(base, mysqld_safe, mysqladmin, defaults_file, port, config = {})
           super
@@ -31,13 +31,14 @@ module EberTech
           self.mysqladmin = mysqladmin
           self.defaults_file = defaults_file
           self.port = port
+          self.config = config
         end        
         
         def invoke!
           args = [%Q{--defaults-file='#{defaults_file}'}]
           args << "--skip-networking" if port.blank?
           return if base.pretend?
-          base.run_in_background mysqld_safe, args    
+          base.run_in_background mysqld_safe, args, config    
           
           wait_until(10) do
             base.run mysqladmin, [%Q{--defaults-file='#{defaults_file}'}, "status"]
@@ -100,11 +101,11 @@ module EberTech
       end      
       
       def stop_database!(mysqladmin, defaults_file, options = {})
-        action MysqlAdminStop.new(self, mysqladmin, defaults_file, options = {})
+        action MysqlAdminStop.new(self, mysqladmin, defaults_file, options)
       end
 
       def start_database!(mysqld_safe, mysqladmin, defaults_file, port, options = {})
-        action MysqlAdminStart.new(self, mysqld_safe, mysqladmin, defaults_file, port, options = {})
+        action MysqlAdminStart.new(self, mysqld_safe, mysqladmin, defaults_file, port, options)
       end
     end
   end

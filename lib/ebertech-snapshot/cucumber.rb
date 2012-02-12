@@ -4,8 +4,10 @@ EberTech::Snapshot::Database.class_eval do
   MARKER = /^@!/
   def reset_before_scenario(scenario)
     with_tagged_scenario(scenario) do |tag|
-      reset_to!(tag)
-      mark_dirty!
+      shell.mute do 
+        reset_to!(tag, :single_fork => true)
+        mark_dirty!
+      end
       ActiveRecord::Base.establish_connection          
     end
   end
@@ -24,7 +26,9 @@ EberTech::Snapshot::Database.class_eval do
 
   def reset_after_scenario(scenario)
     with_tagged_scenario(scenario) do |tag|
-      reset_to!(tag)      
+      shell.mute do 
+        reset_to!(tag, :single_fork => true)      
+      end
       ActiveRecord::Base.establish_connection
     end
   end
