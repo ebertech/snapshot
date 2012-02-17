@@ -52,3 +52,11 @@ if there's a scenario that creates the current tag run it
 else recurse on children
 
 to build tree just iterate through the tags and link everything up
+
+Can also use this to calculate the most efficient path through the tests, that is, the path that uses the least snapshot resets
+You can also use the transactional database cleaner to make sure things are exactly as they were 
+
+maybe use a custom printer and save a rerun.txt file
+the format is
+
+path:line_number
