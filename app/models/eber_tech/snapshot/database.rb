@@ -113,12 +113,13 @@ module EberTech
       end
 
       def save_tag!(tag, description, options = {})
-        tag = ask_for_new_tag(tag)
+        tag = ask_for_new_tag(tag, options)
         if tag_exists?(tag)
           description ||= get_tag_description(tag)
           remove_tag!(tag)
         end
-        description ||= ask_for_description
+        
+        description ||= ask_for_description(tag)
         say_status :snapshot,  "Saving tag #{tag}", :green        
         with_stopped_database(options) do
           git.add(".")
@@ -179,19 +180,23 @@ module EberTech
         start!(options)
       end
 
-      def ask_for_new_tag(tag = nil)
+      def ask_for_new_tag(tag = nil, options = {})
         tag ||= ask_for_tag
 
-        while tag_exists?(tag) && !ask_overwrite_tag(tag)
-          tag = ask_for_tag
+        unless options[:force]
+          while tag_exists?(tag) && !ask_overwrite_tag(tag)
+            tag = ask_for_tag
+          end
         end
+        
+        raise "No tag" unless tag
 
         tag
       end       
 
       def ask_for_existing_tag(tag)
         return tag if tag && tag_exists?(tag)
-        tag || ask_for_tag_with_menu  
+        tag || ask_for_tag_with_menu.to_s 
       end
 
       def ask_overwrite_tag(tag)
@@ -204,8 +209,8 @@ module EberTech
         end          
       end      
           
-      def ask_for_description
-        HighLine.new.ask("Please provide a short description: ") do |q|
+      def ask_for_description(tag)
+        HighLine.new.ask("Please provide a short description for(#{tag}): ") do |q|
           q.validate = /^.+$/
         end
       end
@@ -219,12 +224,6 @@ module EberTech
         end
       end    
       
-      def ask_for_description
-        HighLine.new.ask("Please provide a short description: ") do |q|
-          q.validate = /^.+$/
-        end
-      end       
-
       def is_clean?(revision)        
         if File.exists?(version_file)
           File.read(version_file).strip == revision.to_s

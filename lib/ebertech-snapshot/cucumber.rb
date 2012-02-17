@@ -2,28 +2,40 @@ database = EberTech::Snapshot::Configuration.load.database
 
 EberTech::Snapshot::Database.class_eval do
   MARKER = /^@!/
+  SAVE_MARKER = /@\+/
   def reset_before_scenario(scenario)
     with_tagged_scenario(scenario) do |tag|
-      shell.mute do 
-        reset_to!(tag, :single_fork => true)
-        mark_dirty!
-      end
-      ActiveRecord::Base.establish_connection          
+      reset_to!(tag, :single_fork => true)
+      mark_dirty!
     end
   end
 
   def with_tagged_scenario(scenario)
     tag = scenario.tag_names.detect{|tag_name| tag_name =~ MARKER}
-    if tag    
-      tag = tag.gsub(MARKER, "") 
+    if tag
+      tag = tag.gsub(MARKER, "")
       if tag_exists?(tag)
-        yield tag
+        shell.mute do
+          yield tag
+        end
+        ActiveRecord::Base.establish_connection
       else
         say_status :snapshot, "No such tag: #{tag}, ignoring", :yellow
       end
-    end    
+    end
   end
   
+  def with_save_tagged_scenario(scenario)
+    tag = scenario.tag_names.detect{|tag_name| tag_name =~ SAVE_MARKER}
+    if tag
+      tag = tag.gsub(SAVE_MARKER, "")
+      shell.mute do
+        yield tag
+      end
+      ActiveRecord::Base.establish_connection
+    end
+  end  
+
   def reset_after_cucumber_configuration
     shell.mute do
       mark_dirty!
@@ -31,12 +43,20 @@ EberTech::Snapshot::Database.class_eval do
   end
 
   def reset_after_scenario(scenario)
-    with_tagged_scenario(scenario) do |tag|
-      shell.mute do 
-        reset_to!(tag, :single_fork => true)      
+    if building?
+      with_save_tagged_scenario(scenario) do |tag|
+        description = nil
+        save_tag!(tag, description, :force => true, :single_fork => true)
       end
-      ActiveRecord::Base.establish_connection
+    else
+      with_tagged_scenario(scenario) do |tag|
+        reset_to!(tag, :single_fork => true)
+      end
     end
+  end
+
+  def building?
+    !!ENV["SNAPSHOT_BUILDING"]
   end
 end
 
