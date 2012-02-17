@@ -210,7 +210,7 @@ module EberTech
       end      
           
       def ask_for_description(tag)
-        HighLine.new.ask("Please provide a short description for(#{tag}): ") do |q|
+        HighLine.new.ask("Please provide a short description for (#{tag}): ") do |q|
           q.validate = /^.+$/
         end
       end
@@ -219,7 +219,8 @@ module EberTech
         HighLine.new.choose do |menu|
           menu.prompt = "Specify a tag name: "
           each_tag do |tag, description|
-            menu.choice [tag, description].join("\t" * 4){ tag }
+            full_description = [tag, description].join("\t" * 4)
+            menu.choice(full_description){ tag }
           end
         end
       end    

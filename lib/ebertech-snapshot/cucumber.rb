@@ -45,7 +45,7 @@ EberTech::Snapshot::Database.class_eval do
   def reset_after_scenario(scenario)
     if building?
       with_save_tagged_scenario(scenario) do |tag|
-        description = nil
+        description = "After #{scenario.title}"
         save_tag!(tag, description, :force => true, :single_fork => true)
       end
     else

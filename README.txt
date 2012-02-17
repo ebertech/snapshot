@@ -1,14 +1,17 @@
-Probably should put things into a proper API so that you can just call
+SNAPSHOT
+============
+If building set the following environment variable:
 
-Snapshot.reset_to!(tag)
-Snapshot.mark_dirty!
+SNAPSHOT_BUILDING=true
 
-etc etc. (DONE)
+@!tag_name resets the db to tag_name BEFORE the scenario
+@+tag_name saves the database AFTER the scenario to tag_name
+
+
+
 
 Also need to be able to re-seed.
 
-This should also be pulled out so that the generator runs by itself without having to do script/generate (DONE)
-  
 General pattern for any project should be
 
 snapshot init (which calls the snapshot generator)
@@ -24,3 +27,28 @@ snapshot save seeded
 seeds should be idempotent
 
 
+NEW TODOS
+
+save snapshot.cnf and my.cnf in db/test_data in config 
+save the port and environment in snapshot.cnf
+make sure to pass environment to rake db:migrate
+in the status command show the currently checked out revision
+
+Need some way to figure out the dependency tree and walk it depth first
+maybe use that for the tree structure in the admin section? 
+
+use git notes to set the parent child relationships
+
+git notes add -m "test2"  -f
+git notes show
+git notes remove
+
+When saving you can figure out who the parent is based on what was last checked out
+which you do by getting the HEAD and figuring out its tag
+
+This way the walking of the dependency tree is easy
+To re-create the scenarios you'd just do a depth-first traversal of the snapshot tree
+if there's a scenario that creates the current tag run it
+else recurse on children
+
+to build tree just iterate through the tags and link everything up
