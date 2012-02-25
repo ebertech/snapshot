@@ -1,9 +1,10 @@
 mysql_install_db: <%= mysql_install_db %>
 mysqld_safe: <%= mysqld_safe %>
 mysql: <%= mysql %>
-database_files_dir: db/test_data/database_files
-datadir: db/test_data
+database_files_dir: .snapshot/test_data/database_files
+datadir: .snapshot/test_data
 mysqladmin: <%= mysqladmin %>
+environment_name: <%= environment_name %>
 <%- if port -%>
 port: <%= port %>
 <%- end -%>

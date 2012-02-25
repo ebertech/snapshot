@@ -48,7 +48,7 @@ module EberTech
             mark_dirty!
             reset_to!(tag)
             rake_task("db:migrate")
-            save_tag!(tag, :force => true)
+            save_tag!(tag, nil, :force => true)
           end
         end
       end

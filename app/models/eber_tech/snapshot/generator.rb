@@ -40,11 +40,12 @@ class EberTech::Snapshot::Generator < Thor::Group
       self.port = ask_port     
       template "snapshot.yml", snapshot_yml_path   
       self.configuration = ::EberTech::Snapshot::Configuration.load      
+      self.environment_name =  ask_environment_name      
     else 
       self.port = configuration.port
+      self.environment_name = configuration.environment_name
     end
-
-    self.environment_name =  ask_environment_name      
+    
     if File.exists?(database_yml_path)
       YAML.load(File.read(database_yml_path)).with_indifferent_access.tap do |config|
         self.database = config[:database]  
@@ -56,7 +57,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       template "database.yml", database_yml_path 
     end
 
-    if !database_exists? || options[:force] || yes?("Overwrite database?")   
+    if !configuration.database_exists? || options[:force] || yes?("Overwrite database?")   
       configuration.database.stop!   
       say_status :delete, data_dir, :red
       FileUtils.rm_rf(data_dir)
@@ -90,10 +91,6 @@ class EberTech::Snapshot::Generator < Thor::Group
 
   private
 
-  def database_exists?
-    File.exists?("db/test_data/database_files/mysql/db.MYD")
-  end
-
   def method_missing(method, *args)
     if !options[method].nil?
       options[method]
@@ -120,7 +117,7 @@ class EberTech::Snapshot::Generator < Thor::Group
 
   def ask_environment_name
     HighLine.new.ask("Environment: ") do |question|
-      question.default = "development"
+      question.default = environment_name
     end
   end
 
@@ -139,6 +136,6 @@ class EberTech::Snapshot::Generator < Thor::Group
   end  
 
   def snapshot_yml_path
-    File.join(rails_config_dir, "snapshot.yml")       
+     ::EberTech::Snapshot::Configuration.default_configuration_path    
   end
 end

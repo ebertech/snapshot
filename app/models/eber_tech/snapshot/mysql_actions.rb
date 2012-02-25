@@ -18,7 +18,7 @@ module EberTech
         end        
            
         def invoke!
-          base.run mysqladmin, [%Q{--defaults-file='#{defaults_file}'}, "shutdown"]                  
+          base.run mysqladmin, [%Q{--defaults-file='#{File.expand_path(defaults_file)}'}, "shutdown"]                  
         end
       end
       
@@ -35,8 +35,7 @@ module EberTech
         end        
         
         def invoke!
-          args = [%Q{--defaults-file='#{defaults_file}'}]
-          args << "--skip-networking" if port.blank?
+          args = [%Q{--defaults-file='#{File.expand_path(defaults_file)}'}]
           return if base.pretend?
           base.run_in_background mysqld_safe, args, config    
           
