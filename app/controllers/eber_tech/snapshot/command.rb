@@ -16,6 +16,7 @@ module EberTech
       subcommand "stop", %Q{Stop the database}, StopDatabaseCommand      
       subcommand "restart", %Q{Restart the database}, RestartDatabaseCommand      
       subcommand "status", %Q{Get the status of the database}, StatusCommand      
+      subcommand "dump", %Q{Dump the database to standard output}, DumpDatabaseCommand
     end
   end
 end

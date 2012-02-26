@@ -72,6 +72,10 @@ module EberTech
         create_database! mysql_install_db, database_files_dir, mysql_base_dir, options      
       end
       
+      def dump(options = {})
+        dump_database mysqldump, mysql_defaults_path, user, database_name, options
+      end
+      
       def grant!(options = {})
         grant_access! mysql, mysql_defaults_path, user, options
       end
@@ -172,7 +176,7 @@ module EberTech
       
       private
       
-      delegate :mysql_install_db, :database_files_dir, :mysqld_safe, :mysqladmin, :socket, :git, :mysql_defaults_path,:mysql_base_dir, :port, :mysql, :user, :version_file, :pid_file, :to => :configuration
+      delegate :mysql_install_db, :database_files_dir, :mysqld_safe, :mysqladmin, :socket, :git, :mysql_defaults_path,:mysql_base_dir, :port, :mysql, :user, :version_file, :pid_file, :mysqldump, :database_name, :to => :configuration
 
       def with_stopped_database(options = {})
         stop!(options)

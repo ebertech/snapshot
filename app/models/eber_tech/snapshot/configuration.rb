@@ -25,6 +25,14 @@ module EberTech
       
       attr_accessor :snapshot_config_dir, :configuration_path
       
+      def database_configuration
+        YAML.load(File.read(database_yml_path)).with_indifferent_access[environment_name]
+      end
+      
+      def database_name
+        database_configuration[:database]
+      end
+      
       def database
         Database.new(self)
       end
@@ -41,6 +49,10 @@ module EberTech
       def data_dir
         File.join(snapshot_config_dir, datadir)
       end
+      
+      def database_yml_path
+        File.join(snapshot_config_dir, "database.yml") 
+      end      
 
       def database_files_dir
         File.join(snapshot_config_dir, @configuration[:database_files_dir])
@@ -77,6 +89,11 @@ module EberTech
       #TODO      
       def mysql_base_dir
         "/usr/local/Cellar/mysql/5.5.19"
+      end
+      
+      #TODO 
+      def mysqldump
+        "/usr/local/bin/mysqldump"
       end
       
       CONFIGURATION_FILE_OPTIONS = [:mysql_install_db, :mysqld_safe, :mysql, :database_files_dir, :datadir, :mysqladmin, :environment_name, :port]

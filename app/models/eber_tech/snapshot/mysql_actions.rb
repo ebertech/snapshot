@@ -42,7 +42,7 @@ module EberTech
           
           wait_until(10) do
             base.shell.mute do 
-              base.run mysqladmin, [%Q{--defaults-file='#{defaults_file}'}, "status"]
+              base.run mysqladmin, [%Q{--defaults-file='#{File.expand_path(defaults_file)}'}, "status"]
             end
           end                
         end
@@ -76,8 +76,24 @@ module EberTech
 
         def invoke!      
           base.say_status :mysql, "Granting admin access to current user"
-          base.run(mysql, ["--defaults-file='#{defaults_file}'", "-u root", %Q{-e "grant shutdown on *.* to #{user}@localhost"}])
+          base.run(mysql, ["--defaults-file='#{File.expand_path(defaults_file)}'", "-u root", %Q{-e "grant shutdown on *.* to #{user}@localhost"}])
         end    
+      end
+      
+      class MysqlDump
+        attr_accessor :base, :mysqldump, :defaults_file, :user, :database_name
+
+        def initialize(base, mysqldump, defaults_file, user, database_name, config = {})
+          self.base = base
+          self.mysqldump = mysqldump
+          self.defaults_file = defaults_file
+          self.user = user
+          self.database_name = database_name
+        end
+
+        def invoke!      
+          base.run_returning_output(mysqldump, ["--defaults-file='#{File.expand_path(defaults_file)}'", "-u root", database_name])
+        end        
       end
 
       class MysqlAdminCreateDatabase
@@ -110,6 +126,10 @@ module EberTech
 
       def start_database!(mysqld_safe, mysqladmin, defaults_file, port, options = {})
         action MysqlAdminStart.new(self, mysqld_safe, mysqladmin, defaults_file, port, options)
+      end
+      
+      def dump_database(mysqldump, defaults_file, user, database_name, options = {})
+        MysqlDump.new(self, mysqldump, defaults_file, user, database_name, options).invoke!
       end
     end
   end

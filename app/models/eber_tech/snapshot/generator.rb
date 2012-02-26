@@ -55,7 +55,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       self.configuration = ::EberTech::Snapshot::Configuration.load  
       raise "Can't load configuration" unless self.configuration    
       template "snapshot.yml", snapshot_yml_path               
-      template "database.yml", database_yml_path      
+      template "database.yml", configuration.database_yml_path      
       
       empty_directory File.dirname(pid_file)
       empty_directory File.dirname(log_file)
@@ -122,10 +122,6 @@ class EberTech::Snapshot::Generator < Thor::Group
     HighLine.new.ask("Username: ") do |question|
       question.default = "root"
     end
-  end  
-
-  def database_yml_path
-    File.join(configuration.snapshot_config_dir, "database.yml") 
   end  
 
   def snapshot_yml_path
