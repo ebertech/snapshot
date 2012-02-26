@@ -40,7 +40,8 @@ class EberTech::Snapshot::Generator < Thor::Group
       self.port = ask_port     
       template "snapshot.yml", snapshot_yml_path   
       self.configuration = ::EberTech::Snapshot::Configuration.load      
-      self.environment_name =  ask_environment_name      
+      self.environment_name =  ask_environment_name
+      self.environment_name = "cucumber"  if self.environment_name.blank?
     else 
       self.port = configuration.port
       self.environment_name = configuration.environment_name
@@ -61,6 +62,10 @@ class EberTech::Snapshot::Generator < Thor::Group
       configuration.database.stop!   
       say_status :delete, data_dir, :red
       FileUtils.rm_rf(data_dir)
+      empty_directory File.dirname(pid_file)
+      empty_directory File.dirname(log_file)
+      empty_directory File.dirname(socket)
+      empty_directory File.dirname(error_log_file)      
       
       template "mysql_conf_template.erb", mysql_defaults_path    
 
@@ -74,14 +79,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       rake_task "db:schema:load"    
       create_git_repository
       configuration.database.save_tag!("schema_loaded", "The schema is clean")  
-      configuration.database.stop!
-
-
-
-      empty_directory File.dirname(pid_file)
-      empty_directory File.dirname(log_file)
-      empty_directory File.dirname(socket)
-      empty_directory File.dirname(error_log_file)      
+      configuration.database.stop!    
     end
   end
 
@@ -128,7 +126,7 @@ class EberTech::Snapshot::Generator < Thor::Group
   end  
 
   def rails_config_dir
-    File.join("config")
+    File.join(Dir.getwd, "config")
   end
 
   def database_yml_path

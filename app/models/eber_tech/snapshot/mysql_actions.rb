@@ -46,7 +46,7 @@ module EberTech
         
         def wait_until(timeout)
           begin
-            Timeout::timeout(10) do
+            Timeout::timeout(30) do
               loop do
                 yield    
                 return if $? == 0

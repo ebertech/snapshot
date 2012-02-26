@@ -11,7 +11,7 @@ module EberTech
         end
         
         def snapshot_config_dir
-          ".snapshot"
+          File.expand_path ".snapshot"
         end
       end                           
                
@@ -20,7 +20,6 @@ module EberTech
         self.snapshot_config_dir = File.dirname(configuration_path)    
         raise "no such file #{configuration_path}. Run snapshot create_config to create." unless File.exists?(configuration_path)
         @configuration = YAML.load(File.read(configuration_path)).with_indifferent_access      
-        @working_dir = File.expand_path("../..", configuration_path)
         ENV["RAILS_ENV"] = environment_name
       end
       
@@ -40,23 +39,23 @@ module EberTech
       end
 
       def data_dir
-        File.join(@working_dir, datadir)
+        File.join(snapshot_config_dir, datadir)
       end
 
       def database_files_dir
-        File.join(@working_dir, @configuration[:database_files_dir])
+        File.join(snapshot_config_dir, @configuration[:database_files_dir])
       end
 
       def pid_file
-        File.join(@working_dir, "tmp", "snapshot.pid")          
+        File.join(snapshot_config_dir, "tmp", "snapshot.pid")          
       end
 
       def log_file
-        File.join(@working_dir, "log", "snapshot.log")          
+        File.join(snapshot_config_dir, "log", "snapshot.log")          
       end
 
       def error_log_file
-        File.join(@working_dir, "log", "snapshot_error.log")
+        File.join(snapshot_config_dir, "log", "snapshot_error.log")
       end
 
       def database_exists?
@@ -64,7 +63,7 @@ module EberTech
       end
 
       def socket
-        File.join(@working_dir, "tmp", "sockets", "snapshot_socket")
+        File.join(snapshot_config_dir, "tmp", "sockets", "snapshot_socket")
       end
       
       def mysql_defaults_path
