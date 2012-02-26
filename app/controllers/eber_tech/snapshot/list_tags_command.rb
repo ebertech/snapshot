@@ -3,13 +3,13 @@ module EberTech
     class ListTagsCommand < AbstractCommand
       def execute
         table = []
-        table << ["Tag", "Description"]
+        table << [shell.set_color("Tag", :white), "Description"]
         
         database.each_tag do |tag, message|
-          table << [tag, message]
+          table << [shell.set_color(tag, :green), message]
         end
         
-        Thor::Shell::Color.new.print_table table
+        shell.print_table table
       end          
     end
   end

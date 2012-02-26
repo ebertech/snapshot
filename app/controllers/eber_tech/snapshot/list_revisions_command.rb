@@ -9,7 +9,7 @@ module EberTech
           table << [sha1, message]
         end
         
-        Thor::Shell::Color.new.print_table table        
+        shell.print_table table        
       end          
     end
   end

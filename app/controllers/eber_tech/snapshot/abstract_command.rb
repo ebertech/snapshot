@@ -2,6 +2,7 @@ module EberTech
   module Snapshot
     class AbstractCommand < ::Clamp::Command
       attr_accessor :database
+      attr_accessor :shell
       
       option "--dry-run", :flag, "Dry run"  
       option "--force", :flag, "Force the operation", :default => false
@@ -9,6 +10,7 @@ module EberTech
       
       def initialize(*args)
         super
+        self.shell = Thor::Shell::Color.new
         self.database = Configuration.load.try(:database)
       end
       
