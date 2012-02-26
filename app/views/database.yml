@@ -1,5 +1,4 @@
---- 
-<%= environment_name %>: &TEST
+<%= environment_name %>:
   username: <%= username %>
   adapter: mysql
   database: <%= database %>
@@ -8,10 +7,3 @@
   <%- if port -%>
   port: <%= port %>
   <%- end -%>
-  
-cucumber: &CUCUMBER
-  <<: *TEST
-culerity:
-  <<: *TEST
-test:
-  <<: *TEST

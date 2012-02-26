@@ -3,7 +3,7 @@ module EberTech
     class Configuration
       class << self
         def load(*args)
-          new(*args) rescue nil
+          new(*args) 
         end
         
         def default_configuration_path
@@ -15,15 +15,15 @@ module EberTech
         end
       end                           
                
-      def initialize(configuration_path = nil)
-        configuration_path ||=  self.class.default_configuration_path  
+      def initialize(path_to_config = nil)
+        self.configuration_path =  path_to_config || self.class.default_configuration_path
         self.snapshot_config_dir = File.dirname(configuration_path)    
         raise "no such file #{configuration_path}. Run snapshot create_config to create." unless File.exists?(configuration_path)
         @configuration = YAML.load(File.read(configuration_path)).with_indifferent_access      
         ENV["RAILS_ENV"] = environment_name
       end
       
-      attr_accessor :snapshot_config_dir
+      attr_accessor :snapshot_config_dir, :configuration_path
       
       def database
         Database.new(self)
@@ -59,7 +59,7 @@ module EberTech
       end
 
       def database_exists?
-        File.exists?(File.join(database_files_dir,"mysql/db.MYD"))
+        File.exists?(configuration_path)
       end
 
       def socket

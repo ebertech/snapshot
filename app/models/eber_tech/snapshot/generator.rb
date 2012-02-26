@@ -35,33 +35,28 @@ class EberTech::Snapshot::Generator < Thor::Group
     end
 
     self.configuration = ::EberTech::Snapshot::Configuration.load    
-
-    unless configuration
-      self.port = ask_port     
-      template "snapshot.yml", snapshot_yml_path   
-      self.configuration = ::EberTech::Snapshot::Configuration.load      
-      self.environment_name =  ask_environment_name
-      self.environment_name = "cucumber"  if self.environment_name.blank?
-    else 
-      self.port = configuration.port
-      self.environment_name = configuration.environment_name
-    end
     
-    if File.exists?(database_yml_path)
-      YAML.load(File.read(database_yml_path)).with_indifferent_access.tap do |config|
-        self.database = config[:database]  
-        self.username = config[:username]  
+    if !configuration || !configuration.database_exists? || options[:force] || handle_conflict(configuration)
+      if configuration
+        configuration.database.stop!       
+        say_status :delete, data_dir, :red
+        FileUtils.rm_rf(data_dir)
       end
-    else
+            
+      self.port = ask_port.to_i    
+      self.port = nil if port.zero?
+
+
+      self.environment_name =  ask_environment_name
+      self.environment_name = "cucumber"  if self.environment_name.blank?      
       self.database = ask_database_name  
       self.username = ask_database_username    
-      template "database.yml", database_yml_path 
-    end
 
-    if !configuration.database_exists? || options[:force] || handle_conflict(configuration)
-      configuration.database.stop!   
-      say_status :delete, data_dir, :red
-      FileUtils.rm_rf(data_dir)
+      self.configuration = ::EberTech::Snapshot::Configuration.load  
+      raise "Can't load configuration" unless self.configuration    
+      template "snapshot.yml", snapshot_yml_path               
+      template "database.yml", database_yml_path      
+      
       empty_directory File.dirname(pid_file)
       empty_directory File.dirname(log_file)
       empty_directory File.dirname(socket)
@@ -78,8 +73,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       rake_task "db:create"
       rake_task "db:schema:load"    
       create_git_repository
-      configuration.database.save_tag!("schema_loaded", "The schema is clean")  
-      configuration.database.stop!    
+      configuration.database.save_tag!("schema_loaded", "The schema is clean")    
     end
   end
 
@@ -120,7 +114,7 @@ class EberTech::Snapshot::Generator < Thor::Group
 
   def ask_environment_name
     HighLine.new.ask("Environment: ") do |question|
-      question.default = environment_name
+      question.default = environment_name || "cucumber"
     end
   end
 
@@ -130,12 +124,8 @@ class EberTech::Snapshot::Generator < Thor::Group
     end
   end  
 
-  def rails_config_dir
-    File.join(Dir.getwd, "config")
-  end
-
   def database_yml_path
-    File.join(rails_config_dir, "database.yml") 
+    File.join(configuration.snapshot_config_dir, "database.yml") 
   end  
 
   def snapshot_yml_path

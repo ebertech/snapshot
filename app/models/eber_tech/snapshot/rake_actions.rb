@@ -6,7 +6,7 @@ module EberTech
         # Rake.application.init
         # Rake.application.load_rakefile
         # Rake::Task[name].invoke
-        run("rake db:migrate")
+        run("rake #{name}")
       end
     end
   end
