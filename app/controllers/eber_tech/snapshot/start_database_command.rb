@@ -9,7 +9,6 @@
 # exit 1
 # # /usr/local/mysql/bin/mysqld_safe --datadir=/Users/ame/Desktop/data -P 3307 --pid-file=$PWD/pidfile #--general-log-file=/Users/ame/Desktop/logs/mysql.log  --log-error=/Users/ame/Desktop/logs/mysql.err #--socket=/Users/ame/Desktop/socket -t /Users/ame/Desktop/logs/
 #--log-warnings=0
-require 'timeout'
 module EberTech
   module Snapshot
     class StartDatabaseCommand < AbstractCommand

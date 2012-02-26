@@ -36,11 +36,14 @@ module EberTech
         
         def invoke!
           args = [%Q{--defaults-file='#{File.expand_path(defaults_file)}'}]
+          base.shell.say_status :mysql, "Starting database", :green
           return if base.pretend?
           base.run_in_background mysqld_safe, args, config    
           
           wait_until(10) do
-            base.run mysqladmin, [%Q{--defaults-file='#{defaults_file}'}, "status"]
+            base.shell.mute do 
+              base.run mysqladmin, [%Q{--defaults-file='#{defaults_file}'}, "status"]
+            end
           end                
         end
         
@@ -54,7 +57,9 @@ module EberTech
               end
             end            
           rescue
-            raise "Timed out"
+            puts $!
+            base.say_status :mysql, "Failed to start, aborting", :red
+            exit 1
           end
         end
       end      

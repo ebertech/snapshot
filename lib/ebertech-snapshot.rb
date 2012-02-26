@@ -11,6 +11,7 @@ require 'active_support'
 require 'active_support/dependencies'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/module/delegation.rb'
+require 'timeout'
 
 %w{models modules controllers}.each do |path|
   if ActiveSupport::Dependencies.respond_to?(:autoload_paths)

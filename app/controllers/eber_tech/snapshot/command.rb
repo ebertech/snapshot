@@ -14,6 +14,7 @@ module EberTech
       subcommand "save", %Q{Saves the database to a given revision or tag. Starts and stops the db in the process}, SaveCommand      
       subcommand "start", %Q{Start the database}, StartDatabaseCommand      
       subcommand "stop", %Q{Stop the database}, StopDatabaseCommand      
+      subcommand "restart", %Q{Restart the database}, RestartDatabaseCommand      
       subcommand "status", %Q{Get the status of the database}, StatusCommand      
     end
   end
