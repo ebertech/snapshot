@@ -58,7 +58,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       template "database.yml", database_yml_path 
     end
 
-    if !configuration.database_exists? || options[:force] || yes?("Overwrite database?")   
+    if !configuration.database_exists? || options[:force] || handle_conflict(configuration)
       configuration.database.stop!   
       say_status :delete, data_dir, :red
       FileUtils.rm_rf(data_dir)
@@ -81,6 +81,11 @@ class EberTech::Snapshot::Generator < Thor::Group
       configuration.database.save_tag!("schema_loaded", "The schema is clean")  
       configuration.database.stop!    
     end
+  end
+
+  def handle_conflict(configuration)
+    say_status :snapshot, "Snapshot already exists", :red
+    shell.file_collision(configuration.snapshot_config_dir)
   end
 
   def pretend?
