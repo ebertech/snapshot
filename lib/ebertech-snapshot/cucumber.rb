@@ -20,7 +20,8 @@ EberTech::Snapshot::Database.class_eval do
         end
         ActiveRecord::Base.establish_connection
       else
-        say_status :snapshot, "No such tag: #{tag}, ignoring", :yellow
+        say_status :snapshot, "No such tag: #{tag}, aborting", :red
+        exit 1
       end
     end
   end
