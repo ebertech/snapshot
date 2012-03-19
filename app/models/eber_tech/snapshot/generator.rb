@@ -14,6 +14,7 @@ class EberTech::Snapshot::Generator < Thor::Group
     :mysqld_safe,
     :mysql, 
     :git,
+    :adapter,
     :mysqladmin
   ].each do |a|
     attr_accessor a
@@ -50,6 +51,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       self.environment_name =  ask_environment_name
       self.environment_name = "cucumber"  if self.environment_name.blank?      
       self.database = ask_database_name  
+      self.adapter = ask_database_adapter
       self.username = ask_database_username    
       template "snapshot.yml", snapshot_yml_path               
       self.configuration = ::EberTech::Snapshot::Configuration.load  
@@ -68,6 +70,8 @@ class EberTech::Snapshot::Generator < Thor::Group
       empty_directory database_files_dir
 
       configuration.database.create!
+      require 'ruby-debug'
+
       configuration.database.start! 
       configuration.database.grant!
 
@@ -114,6 +118,12 @@ class EberTech::Snapshot::Generator < Thor::Group
   def ask_port
     HighLine.new.ask("Port to listen on (leave blank to disable): ") do |question|
       question.default = ""
+    end    
+  end
+
+  def ask_database_adapter
+    HighLine.new.ask("Which adapter do you want to use: ") do |question|
+      question.default = "mysql"
     end    
   end
 

@@ -68,8 +68,12 @@ EberTech::Snapshot::Database.class_eval do
 end
 
 Cucumber::Ast::Scenario.class_eval do
-  def tag_names
-    @tags && @tags.instance_eval{ @tag_names }
+  def tag_names    
+    if @tags.respond_to?(:tags)
+      @tags.tags.map(&:name)
+    else
+      @tags && @tags.instance_eval{ @tag_names }
+    end
   end
 end
 

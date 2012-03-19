@@ -1,6 +1,6 @@
 <%= environment_name %>:
   username: <%= username %>
-  adapter: mysql
+  adapter: <%= adapter %>
   database: <%= database %>
   socket: <%= socket %>
   encoding: utf8
