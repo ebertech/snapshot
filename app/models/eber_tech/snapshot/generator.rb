@@ -34,7 +34,7 @@ class EberTech::Snapshot::Generator < Thor::Group
       self.send(:"#{command}=", which(command.to_s) || raise("Can't find #{command} in path"))
     end
 
-    self.configuration = ::EberTech::Snapshot::Configuration.load    
+    self.configuration = find_or_create_configuration
     
     if !configuration || !configuration.database_exists? || options[:force] || handle_conflict(configuration)
       if configuration
@@ -51,10 +51,11 @@ class EberTech::Snapshot::Generator < Thor::Group
       self.environment_name = "cucumber"  if self.environment_name.blank?      
       self.database = ask_database_name  
       self.username = ask_database_username    
-
-      self.configuration = ::EberTech::Snapshot::Configuration.load  
-      raise "Can't load configuration" unless self.configuration    
       template "snapshot.yml", snapshot_yml_path               
+      self.configuration = ::EberTech::Snapshot::Configuration.load  
+
+      raise "Can't load configuration" unless self.configuration    
+
       template "database.yml", configuration.database_yml_path      
       
       empty_directory File.dirname(pid_file)
@@ -75,6 +76,10 @@ class EberTech::Snapshot::Generator < Thor::Group
       create_git_repository
       configuration.database.save_tag!("schema_loaded", "The schema is clean")    
     end
+  end
+
+  def find_or_create_configuration
+    ::EberTech::Snapshot::Configuration.load    
   end
 
   def handle_conflict(configuration)

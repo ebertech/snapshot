@@ -60,3 +60,6 @@ maybe use a custom printer and save a rerun.txt file
 the format is
 
 path:line_number
+
+
+Move all shell.say_status into the commands

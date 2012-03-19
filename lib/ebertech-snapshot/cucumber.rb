@@ -50,8 +50,10 @@ EberTech::Snapshot::Database.class_eval do
         save_tag!(tag, description, :force => true, :single_fork => true)
       end
     else
-      with_tagged_scenario(scenario) do |tag|
-        reset_to!(tag, :single_fork => true)
+      if resetting_after_each_scenario?
+        with_tagged_scenario(scenario) do |tag|
+          reset_to!(tag, :single_fork => true)
+        end
       end
     end
   end
@@ -59,6 +61,10 @@ EberTech::Snapshot::Database.class_eval do
   def building?
     !!ENV["SNAPSHOT_BUILDING"]
   end
+  
+  def resetting_after_each_scenario?
+    !ENV["SNAPSHOT_NORESET"]    
+  end  
 end
 
 Cucumber::Ast::Scenario.class_eval do

@@ -3,7 +3,7 @@ module EberTech
     class Configuration
       class << self
         def load(*args)
-          new(*args) 
+          new(*args) rescue nil
         end
         
         def default_configuration_path
