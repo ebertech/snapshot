@@ -1,6 +1,7 @@
 [mysqld]
 #Max packetlength to send/receive from to server.
 max_allowed_packet=64M
+user=<%= username %>
 datadir=<%= database_files_dir %>
 <%- if port -%>
 port= <%= port %>

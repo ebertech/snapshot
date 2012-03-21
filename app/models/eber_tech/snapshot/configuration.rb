@@ -88,7 +88,7 @@ module EberTech
       
       #TODO      
       def mysql_base_dir
-        "/usr/local/Cellar/mysql/5.5.19"
+        File.expand_path(File.join(%x{which my_print_defaults}.strip, "../.."))
       end
       
       #TODO 
