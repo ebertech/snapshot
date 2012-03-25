@@ -70,7 +70,6 @@ class EberTech::Snapshot::Generator < Thor::Group
       empty_directory database_files_dir
 
       configuration.database.create!
-      require 'ruby-debug'
 
       configuration.database.start! 
       configuration.database.grant!
